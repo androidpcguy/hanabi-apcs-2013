@@ -14,7 +14,7 @@ public class simpleclient
 			ois = new ObjectInputStream( s.getInputStream() );
 			System.out.println( ois.readObject() );
 			s.close();
-			 Thread.sleep( 100 );
+			Thread.sleep( 100 );
 		}
 	}
 }
