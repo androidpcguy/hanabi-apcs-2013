@@ -1,3 +1,5 @@
+package networking_tutorials.workspace;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.*;
@@ -5,8 +7,8 @@ import java.io.*;
 
 public class simpleserver
 {
-	public static final int port = 100;
-
+	public static final int port = 1030;
+	
 
 	public static void main( String... args ) throws Exception
 	{
