@@ -1,3 +1,5 @@
+package networking_tutorials.workspace;
+
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
