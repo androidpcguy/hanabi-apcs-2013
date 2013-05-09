@@ -9,4 +9,9 @@ public class Player {
 
 	private GameComponent gameComp;
 
+	private int playerNum;
+
+	public int getPlayerNum() {
+		return playerNum;
+	}
 }
