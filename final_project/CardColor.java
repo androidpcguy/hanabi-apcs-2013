@@ -8,18 +8,17 @@ public enum CardColor {
 	BLUE(Color.BLUE),
 	GREEN(Color.GREEN),
 	BLACK(Color.BLACK),
-	//TODO: fix the next two
-	PURPLE(null),
+	PURPLE(new Color(208,32,144)),
+	//FIXME: rainbow color 
 	RAINBOW(null);
-	
+
 	private Color color;
-	
-	private CardColor (Color color) {
+
+	private CardColor(Color color) {
 		this.color = color;
 	}
-	
-	public Color getColor()
-	{
+
+	public Color getColor() {
 		return color;
 	}
 }
