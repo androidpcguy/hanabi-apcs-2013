@@ -10,4 +10,5 @@ public class GameState {
 	private List<Card> discardPile;
 	private int currPlayer;
 	private int numClues, numLives;
+	private List<boolean[]> cardClues;
 }
