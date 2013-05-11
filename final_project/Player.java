@@ -7,8 +7,6 @@ import java.util.ArrayList;
 public class Player {
 	private ObjectInputStream inputStream;
 	private ObjectOutputStream outputStream;
-	
-	private ArrayList<Card> cards;
 
 	private GameComponent gameComp;
 
