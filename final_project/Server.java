@@ -9,7 +9,7 @@ public class Server {
 	private GameState gameState;
 	private ObjectOutputStream output;
 	private ObjectInputStream input;
-
+	
 	public static void main(String[] args) {
 	}
 }
