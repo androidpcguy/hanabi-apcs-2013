@@ -19,6 +19,7 @@ public class Player {
 		try {
 			socket = new Socket(serverIP, portNumber);
 		} catch (IOException ioex) {
+			System.out.println("connection failed: wrong port number or server ip address!");
 			ioex.printStackTrace();
 		}
 	}
