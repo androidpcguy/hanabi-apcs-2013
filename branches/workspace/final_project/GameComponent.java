@@ -1,9 +1,9 @@
 package final_project;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
-//this will be a jpanel one per player
-public class GameComponent extends JPanel {
+//this will be a jframe one per player
+public class GameComponent extends JFrame {
 
 	private GameState state;
 }
