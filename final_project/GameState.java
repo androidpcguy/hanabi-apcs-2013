@@ -19,16 +19,11 @@ public class GameState {
 
 	private int currPlayer;
 
-	private static final int TOTAL_LIVES = 3, TOTAL_CLUES = 8,
-			NUMBER_OF_POSSIBLE_CLUES = 11;
+	private static final int TOTAL_LIVES = 3, TOTAL_CLUES = 8;
 
 	private int numClues, numLives;
 
-	/**
-	 * List holding all the clues for the cards. Boolean array: indices 0-4:
-	 * number clues, 5-10: color clues
-	 */
-	ArrayList<boolean[]> cardClues;
+	private int numCards;
 
 	private boolean rainbow;
 
@@ -37,10 +32,7 @@ public class GameState {
 	public GameState(int numPlayers, boolean rainbow) {
 		this.rainbow = rainbow;
 		this.numPlayers = numPlayers;
-		cardClues = new ArrayList<boolean[]>();
-		for (int i = 0, cards = rainbow ? 60 : 50; i < cards; i++) {
-			cardClues.add(new boolean[11]);
-		}
+		numCards = rainbow ? 60 : 50;
 		createDeck();
 		hands = new ArrayList<List<Card>>();
 		numClues = TOTAL_CLUES;
@@ -52,8 +44,8 @@ public class GameState {
 	}
 
 	private void createDeck() {
-		ArrayList<Card> cards = new ArrayList<Card>(cardClues.size());
-		for (int color = 0, i = 0; color < cardClues.size() / 10; color++) {
+		ArrayList<Card> cards = new ArrayList<Card>(numCards);
+		for (int color = 0, i = 0; color < numCards / 10; color++) {
 			cards.add(new Card(1, CARD_COLORS[color], i++));
 			cards.add(new Card(1, CARD_COLORS[color], i++));
 			cards.add(new Card(1, CARD_COLORS[color], i++));
@@ -75,42 +67,21 @@ public class GameState {
 	}
 
 	/**
-	 * @param to
-	 * @param cards
+	 * @param playerNum
 	 * @param color
 	 *            if color clue given, this is a valid color, else if number
 	 *            clue is given this is <tt>null</tt>
 	 * @param numOfCard
 	 *            if number clue is given, 1 <= numOfCard <= 5. else, this is 0
 	 */
-	public void giveClue(Player to, List<Card> cards, CardColor color,
-			int numOfCard) {
-		int playerNum = to.getPlayerNum();
-		//TODO: work on this
-		if (color != null)
-			for (Card card : cards) {
-				int cardIndex = card.getCardIndex();
-				if (rainbow) {
-					boolean isRainbowCard = false;
-					for (int i = 5; i < NUMBER_OF_POSSIBLE_CLUES; i++) {
-						if (cardClues.get(cardIndex)[i]) {
-							isRainbowCard = true;
-						} else {
-							if (i == COLORS.indexOf(color))
-								cardClues.get(cardIndex)[i] = true;
-						}
-					}
-					if (isRainbowCard) {
-						for (int i = 5; i < NUMBER_OF_POSSIBLE_CLUES - 1; i++)
-							cardClues.get(cardIndex)[i] = false;
-						cardClues.get(cardIndex)[10] = true;
-					}
-				}// end if
-				else {
-
-				}
-			}
-
+	public void giveClue(int playerNum, CardColor color, int numOfCard) {
+		if (color == null) {
+			for (Card card : hands.get(playerNum))
+				card.giveNumberClue(numOfCard);
+		} else {
+			for (Card card : hands.get(playerNum))
+				card.giveColorClue(color);
+		}
 	}
 
 	public int getCurrPlayer() {
@@ -136,13 +107,4 @@ public class GameState {
 	public void updatePlayer() {
 		currPlayer++;
 	}
-
-	// TESTING: DELETE AFTER EVERYTHING WORKS
-	public static void main(String... args) {
-		GameState g = new GameState(3, false);
-		for (Card c : g.deck)
-			System.out.println(c);
-		System.out.println(g.deck.size());
-	}
-
 }

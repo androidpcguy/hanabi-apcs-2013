@@ -29,7 +29,7 @@ public class Player extends Thread {
 	 */
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
-		gameComp = new GameComponent(gameState);
+		gameComp = new GameComponent(playerNum, gameState);
 		try {
 			socket = new Socket(serverIP, portNumber);
 			input = new ObjectInputStream(socket.getInputStream());
@@ -55,6 +55,12 @@ public class Player extends Thread {
 				gameComp.updateGame(gameState);
 				if (gameState.getCurrPlayer() == playerNum) {
 					gameComp.play();
+					try {
+						while (!gameComp.doneWithTurn())
+							sleep(10);
+					} catch (InterruptedException iex) {
+						iex.printStackTrace();
+					}
 					this.gameState = gameComp.getGameState();
 					output.writeObject(gameState);
 				}

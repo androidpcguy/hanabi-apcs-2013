@@ -74,7 +74,7 @@ public class Server extends Thread {
 		}
 	}
 
-	boolean allAreConnected() {
+	public boolean allAreConnected() {
 		for (int x = 0; x < clients.size(); x++) {
 			if (!clients.get(x).isConnected()) {
 				return false;
