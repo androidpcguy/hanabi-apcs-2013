@@ -1,7 +1,9 @@
 package final_project;
 
 public class Card {
+
 	private int number;
+
 	private CardColor color;
 
 	public Card(int number, CardColor color) {
@@ -15,5 +17,9 @@ public class Card {
 
 	public CardColor getColor() {
 		return color;
+	}
+
+	public String toString() {
+		return "Number: " + number + " Color: " + color;
 	}
 }
