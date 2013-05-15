@@ -17,6 +17,16 @@ public class Player extends Thread {
 
 	private GameState gameState;
 
+	/**
+	 * Constructs a new <tt>Player</tt> and connects it to the server using the
+	 * specified <tt>serverIP</tt> and <tt>portNumber</tt>
+	 * 
+	 * @param portNumber
+	 *            port number of server
+	 * @param serverIP
+	 *            IP Address of server
+	 * @param gameState
+	 */
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
 		gameComp = new GameComponent(gameState);
@@ -32,6 +42,11 @@ public class Player extends Thread {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		while (socket.isConnected()) {
@@ -51,6 +66,11 @@ public class Player extends Thread {
 		}
 	}
 
+	/**
+	 * Accessor method for index of player.
+	 * 
+	 * @return this <tt>Player</tt>'s index
+	 */
 	public int getPlayerNum() {
 		return playerNum;
 	}
