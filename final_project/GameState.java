@@ -21,7 +21,7 @@ public class GameState {
 
 	private int numClues, numLives;
 
-	private List<boolean[]> cardClues;
+	ArrayList<boolean[]> cardClues;
 
 	private boolean rainbow;
 
@@ -31,17 +31,36 @@ public class GameState {
 		this.rainbow = rainbow;
 		this.numPlayers = numPlayers;
 		cardClues = new ArrayList<boolean[]>();
-		for (int i = 0, cards = rainbow ? 60 : 50; i < cards; i++)
+		for (int i = 0, cards = rainbow ? 60 : 50; i < cards; i++) {
 			cardClues.add(new boolean[11]);
+		}
 		createDeck();
+		hands = new ArrayList<List<Card>>();
 		numClues = TOTAL_CLUES;
 		numLives = TOTAL_LIVES;
+
 		discardPile = new ArrayList<Card>();
 		currPlayer = (int) (Math.random() * numPlayers);
 	}
 
 	private void createDeck() {
 		CardColor[] colors = { RED, PURPLE, BLUE, BLACK, GREEN, RAINBOW };
+		ArrayList<Card> cards = new ArrayList<Card>(cardClues.size());
+		for (int color = 0; color < cardClues.size() / 10; color++) {
+			cards.add(new Card(1, colors[color]));
+			cards.add(new Card(1, colors[color]));
+			cards.add(new Card(1, colors[color]));
+			cards.add(new Card(2, colors[color]));
+			cards.add(new Card(2, colors[color]));
+			cards.add(new Card(3, colors[color]));
+			cards.add(new Card(3, colors[color]));
+			cards.add(new Card(4, colors[color]));
+			cards.add(new Card(4, colors[color]));
+			cards.add(new Card(5, colors[color]));
+		}
+		deck = new Stack<Card>();
+		for (int i = 0; i < cards.size(); i++)
+			deck.push(cards.get((int) (Math.random() * cards.size())));
 	}
 
 	public void dealCard(int playerNum) {
@@ -49,14 +68,19 @@ public class GameState {
 	}
 
 	/**
-	 * @param from
 	 * @param to
 	 * @param cards
 	 * @param color
 	 * @param numOfCard
 	 */
-	public void giveClue(Player from, Player to, List<Card> cards,
-			CardColor color, int numOfCard) {}
+	public void giveClue(Player to, List<Card> cards, CardColor color,
+			int numOfCard) {
+		int playerNum = to.getPlayerNum();
+		//TODO: think about this. don't edit yet
+		if (color != null)
+			for (Card card : cards) {
+			}
+	}
 
 	public int getCurrPlayer() {
 		return currPlayer;
@@ -72,5 +96,11 @@ public class GameState {
 
 	public List<Card> getHand(int numPlayer) {
 		return hands.get(numPlayer);
+	}
+
+	public static void main(String... args) {
+		GameState g = new GameState(3, false);
+		for (Card c : g.deck)
+			System.out.println(c);
 	}
 }

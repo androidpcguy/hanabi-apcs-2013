@@ -6,4 +6,8 @@ import javax.swing.*;
 public class GameComponent extends JFrame {
 
 	private GameState state;
+
+	public GameState getGameState() {
+		return state;
+	}
 }
