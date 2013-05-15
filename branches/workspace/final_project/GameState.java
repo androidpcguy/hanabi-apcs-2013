@@ -1,11 +1,15 @@
 package final_project;
 
-import java.util.ArrayList;
 import static final_project.CardColor.*;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class GameState {
+
+	private static final CardColor[] CARD_COLORS = { RED, PURPLE, BLUE, BLACK,
+			GREEN, RAINBOW };
+
+	private static final ArrayList<CardColor> COLORS = new ArrayList<CardColor>(
+			Arrays.asList(CARD_COLORS));
 
 	private ArrayList<List<Card>> hands;
 
@@ -15,12 +19,15 @@ public class GameState {
 
 	private int currPlayer;
 
-	private static final int TOTAL_LIVES = 3;
-
-	private static final int TOTAL_CLUES = 8;
+	private static final int TOTAL_LIVES = 3, TOTAL_CLUES = 8,
+			NUMBER_OF_POSSIBLE_CLUES = 11;
 
 	private int numClues, numLives;
 
+	/**
+	 * List holding all the clues for the cards. Boolean array: indices 0-4:
+	 * number clues, 5-10: color clues
+	 */
 	ArrayList<boolean[]> cardClues;
 
 	private boolean rainbow;
@@ -41,22 +48,22 @@ public class GameState {
 
 		discardPile = new ArrayList<Card>();
 		currPlayer = (int) (Math.random() * numPlayers);
+
 	}
 
 	private void createDeck() {
-		CardColor[] colors = { RED, PURPLE, BLUE, BLACK, GREEN, RAINBOW };
 		ArrayList<Card> cards = new ArrayList<Card>(cardClues.size());
-		for (int color = 0; color < cardClues.size() / 10; color++) {
-			cards.add(new Card(1, colors[color]));
-			cards.add(new Card(1, colors[color]));
-			cards.add(new Card(1, colors[color]));
-			cards.add(new Card(2, colors[color]));
-			cards.add(new Card(2, colors[color]));
-			cards.add(new Card(3, colors[color]));
-			cards.add(new Card(3, colors[color]));
-			cards.add(new Card(4, colors[color]));
-			cards.add(new Card(4, colors[color]));
-			cards.add(new Card(5, colors[color]));
+		for (int color = 0, i = 0; color < cardClues.size() / 10; color++) {
+			cards.add(new Card(1, CARD_COLORS[color], i++));
+			cards.add(new Card(1, CARD_COLORS[color], i++));
+			cards.add(new Card(1, CARD_COLORS[color], i++));
+			cards.add(new Card(2, CARD_COLORS[color], i++));
+			cards.add(new Card(2, CARD_COLORS[color], i++));
+			cards.add(new Card(3, CARD_COLORS[color], i++));
+			cards.add(new Card(3, CARD_COLORS[color], i++));
+			cards.add(new Card(4, CARD_COLORS[color], i++));
+			cards.add(new Card(4, CARD_COLORS[color], i++));
+			cards.add(new Card(5, CARD_COLORS[color], i++));
 		}
 		deck = new Stack<Card>();
 		for (int i = 0; i < cards.size(); i++)
@@ -71,15 +78,39 @@ public class GameState {
 	 * @param to
 	 * @param cards
 	 * @param color
+	 *            if color clue given, this is a valid color, else if number
+	 *            clue is given this is <tt>null</tt>
 	 * @param numOfCard
+	 *            if number clue is given, 1 <= numOfCard <= 5. else, this is 0
 	 */
 	public void giveClue(Player to, List<Card> cards, CardColor color,
 			int numOfCard) {
 		int playerNum = to.getPlayerNum();
-		// TODO: think about this. don't edit yet
+		//TODO: work on this
 		if (color != null)
 			for (Card card : cards) {
+				int cardIndex = card.getCardIndex();
+				if (rainbow) {
+					boolean isRainbowCard = false;
+					for (int i = 5; i < NUMBER_OF_POSSIBLE_CLUES; i++) {
+						if (cardClues.get(cardIndex)[i]) {
+							isRainbowCard = true;
+						} else {
+							if (i == COLORS.indexOf(color))
+								cardClues.get(cardIndex)[i] = true;
+						}
+					}
+					if (isRainbowCard) {
+						for (int i = 5; i < NUMBER_OF_POSSIBLE_CLUES - 1; i++)
+							cardClues.get(cardIndex)[i] = false;
+						cardClues.get(cardIndex)[10] = true;
+					}
+				}// end if
+				else {
+
+				}
 			}
+
 	}
 
 	public int getCurrPlayer() {
@@ -98,13 +129,20 @@ public class GameState {
 		return hands.get(numPlayer);
 	}
 
+	public int getNumPlayers() {
+		return this.numPlayers;
+	}
+
+	public void updatePlayer() {
+		currPlayer++;
+	}
+
+	// TESTING: DELETE AFTER EVERYTHING WORKS
 	public static void main(String... args) {
 		GameState g = new GameState(3, false);
 		for (Card c : g.deck)
 			System.out.println(c);
+		System.out.println(g.deck.size());
 	}
 
-	public int getNumPlayers() {
-		return this.numPlayers;
-	}
 }

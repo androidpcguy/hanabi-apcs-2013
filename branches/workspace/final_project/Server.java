@@ -33,7 +33,7 @@ public class Server extends Thread {
 	@Override
 	public void run() {
 		connect(gameState.getNumPlayers());
-		while (allIsConnected()) {
+		while (allAreConnected()) {
 			getNewGameState();
 			sendNewGameState();
 		}
@@ -41,7 +41,7 @@ public class Server extends Thread {
 
 	public void sendNewGameState() {
 		try {
-			for ( int x = 0; x < input.size(); x++ ) {
+			for (int x = 0; x < input.size(); x++) {
 				output.get(x).writeObject(gameState);
 			}
 		} catch (IOException ioex) {
@@ -74,7 +74,7 @@ public class Server extends Thread {
 		}
 	}
 
-	public boolean allIsConnected() {
+	boolean allAreConnected() {
 		for (int x = 0; x < clients.size(); x++) {
 			if (!clients.get(x).isConnected()) {
 				return false;
