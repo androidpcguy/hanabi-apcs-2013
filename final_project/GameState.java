@@ -76,7 +76,7 @@ public class GameState {
 	public void giveClue(Player to, List<Card> cards, CardColor color,
 			int numOfCard) {
 		int playerNum = to.getPlayerNum();
-		//TODO: think about this. don't edit yet
+		// TODO: think about this. don't edit yet
 		if (color != null)
 			for (Card card : cards) {
 			}
@@ -102,5 +102,9 @@ public class GameState {
 		GameState g = new GameState(3, false);
 		for (Card c : g.deck)
 			System.out.println(c);
+	}
+
+	public int getNumPlayers() {
+		return this.numPlayers;
 	}
 }
