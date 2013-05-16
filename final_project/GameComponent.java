@@ -24,6 +24,7 @@ public class GameComponent extends JComponent implements MouseListener {
 	public GameComponent(int playerNum, GameState gameState) {
 		this.gameState = gameState;
 		this.playerNum = playerNum;
+		this.setPreferredSize(new Dimension(800,600));
 	}
 
 	public GameState getGameState() {

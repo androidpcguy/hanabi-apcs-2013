@@ -1,7 +1,12 @@
 package final_project;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 public class Player extends Thread {
 
@@ -30,6 +35,7 @@ public class Player extends Thread {
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
 		gameComp = new GameComponent(playerNum, gameState);
+		
 		try {
 			socket = new Socket(serverIP, portNumber);
 			input = new ObjectInputStream(socket.getInputStream());
@@ -40,6 +46,12 @@ public class Player extends Thread {
 					.println("connection failed: wrong port number or server ip address!");
 			ioex.printStackTrace();
 		}
+		JFrame gameFrame = new JFrame("Hanabi: Player " + playerNum);
+		gameFrame.add(gameComp);
+		gameFrame.pack();
+		gameFrame.setVisible(true);
+		gameFrame.setResizable(false);
+		gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
 	/*
