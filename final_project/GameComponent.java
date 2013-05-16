@@ -1,14 +1,20 @@
 package final_project;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 import javax.swing.*;
 
-//this will be a jframe one per player
 public class GameComponent extends JComponent implements MouseListener {
-
+	
+	private static final Color HAND_BG = new Color(0xffff80);
+	private static final Color THIS_HAND_BG = new Color(0x6060ff);
+	
 	private GameState gameState;
 
 	private int playerNum;
@@ -43,6 +49,68 @@ public class GameComponent extends JComponent implements MouseListener {
 	@Override
 	public void paint (Graphics g) {
 		//TODO paint
+		if (gameState == null) {
+			return;
+		}
+		
+		paintHands(g, 0, 0);
+	}
+	
+	private void paintHands (Graphics g, int x, int y) {
+		for (int i = 0; i < gameState.getNumPlayers(); i++) {
+			// fill rectangle with hand background color
+			g.setColor(i == playerNum ? THIS_HAND_BG : HAND_BG);
+			g.fillRect(x, y + i*120, 400, 120);
+			
+			// paint the hand
+			paintHand(g,
+				gameState.getHand(i),
+				x,
+				y + i*120,
+				i != playerNum);
+			
+			// put a border around it
+			g.setColor(Color.BLACK);
+			g.drawRect(x, y + i*120, 400, 120);
+		}
+	}
+	
+	private void paintHand (Graphics g, List<Card> hand, int x, int y,
+			boolean known) {
+		for (int i = 0; i < hand.size(); i++) {
+			paintCard(g,
+				hand.get(i),
+				x + i*80,
+				y,
+				known);
+		}
+	}
+	
+	private void paintCard (Graphics g, Card card, int x, int y,
+			boolean known) {
+		//TODO card
+		Image cardImages = ImageLoader.getImage(ImageLoader.CARD_IMAGES);
+		Image clueImages = ImageLoader.getImage(ImageLoader.CLUE_IMAGES);
+		
+		Dimension cardSize = ImageLoader.getTileSize(ImageLoader.CARD_IMAGES);
+		
+		// draw the card background and big number
+		int tilex, tiley;
+		if (known) {
+			tilex = card.getColor().getIndex();
+			tiley = card.getNumber() - 1;
+		} else {
+			tilex = 6;
+			tiley = 0;
+		}
+		
+		g.drawImage(cardImages,
+			x, y, x + cardSize.width, y + cardSize.height,
+			tilex*cardSize.width, tiley*cardSize.height,
+			(tilex+1)*cardSize.width, (tiley+1)*cardSize.height,
+			null);
+		
+		// TODO draw the clues
 	}
 
 	@Override
