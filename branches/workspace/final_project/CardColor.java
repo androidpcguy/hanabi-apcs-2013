@@ -28,4 +28,12 @@ public enum CardColor {
 	public int getIndex() {
 		return colorIndex;
 	}
+	
+	public boolean matchForClues (CardColor other) {
+		if (other == RAINBOW || this == RAINBOW) {
+			return true;
+		} else {
+			return this == other;
+		}
+	}
 }

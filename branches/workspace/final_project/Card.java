@@ -26,17 +26,6 @@ public class Card {
 			numberClues[i] = true;
 	}
 
-	public int getNumber() {
-		return number;
-	}
-
-	public CardColor getColor() {
-		return color;
-	}
-
-	public int getCardIndex() {
-		return cardIndex;
-	}
 
 	public void giveNumberClue(int number) {
 		if (this.number != number) {
@@ -49,30 +38,44 @@ public class Card {
 	}
 
 	public void giveColorClue(CardColor color) {
-		int oneTrue = oneColor();
-		if (oneTrue == -1) {
-			if (this.color != color)
-				this.colorClues[color.getIndex()] = false;
-			else
-				for (int i = 0; i < colorClues.length - 1; i++)
-					if (i != color.getIndex())
-						colorClues[i] = false;
+		if (!color.matchForClues(this.color)) {
+			colorClues[color.getIndex()] = false;
+			colorClues[colorClues.length - 1] = false;
 		} else {
-			// TODO: finish this
+			if (!colorClues[color.getIndex()]) {
+				for (int i = 0; i < 5; i++) {
+					colorClues[i] = false;
+				}
+			} else {
+				for (int i = 0; i < 5; i++) {
+					if (i != color.getIndex()) {
+						colorClues[i] = false;
+					}
+				}
+			}
 		}
 
 	}
 
-	private int oneColor() {
-		// change name this later
-		int i = -1;
-		for (int j = 0; j < colorClues.length - 1; j++)
-			if (colorClues[j] && i != -1)
-				return -1;
-			else if (colorClues[j])
-				i = j;
-		return i;
+	public boolean[] getColorClues() {
+		return colorClues;
+	}
 
+	public boolean[] getNumberClues() {
+		return numberClues;
+	}
+	
+
+	public int getNumber() {
+		return number;
+	}
+
+	public CardColor getColor() {
+		return color;
+	}
+
+	public int getCardIndex() {
+		return cardIndex;
 	}
 
 	public boolean equals(Object other) {

@@ -104,6 +104,10 @@ public class GameState {
 		return this.numPlayers;
 	}
 
+	public List<Card> getDiscardPile() {
+		return discardPile;
+	}
+
 	public void updatePlayer() {
 		currPlayer++;
 	}

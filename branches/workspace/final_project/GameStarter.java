@@ -1,6 +1,7 @@
 package final_project;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 //shows menu before starting game for ip addresses and port number for clients
 public class GameStarter extends JFrame {
@@ -14,5 +15,17 @@ public class GameStarter extends JFrame {
 		}
 		Player client = new Player(port, serverIP, gameState);
 		client.start();
+	}
+
+	// TODO: need gui
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				new GameStarter();
+			}
+		});
 	}
 }
