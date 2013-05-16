@@ -89,7 +89,6 @@ public class GameComponent extends JComponent implements MouseListener {
 	
 	private void paintCard (Graphics g, Card card, int x, int y,
 			boolean known) {
-		//TODO card
 		Image cardImages = ImageLoader.getImage(ImageLoader.CARD_IMAGES);
 		Image clueImages = ImageLoader.getImage(ImageLoader.CLUE_IMAGES);
 		
@@ -111,7 +110,42 @@ public class GameComponent extends JComponent implements MouseListener {
 			(tilex+1)*cardSize.width, (tiley+1)*cardSize.height,
 			null);
 		
-		// TODO draw the clues
+		// draw the number clues
+		boolean[] numberClues = card.getNumberClues();
+		tiley = 1;
+		
+		for (int i = 0; i < numberClues.length; i++) {
+			if (numberClues[i]) {
+				g.drawImage(clueImages,
+					x, y, x + cardSize.width, y + cardSize.height,
+					i*cardSize.width, tiley*cardSize.height,
+					(i+1)*cardSize.width, (tiley+1)*cardSize.height,
+					null);
+			}
+		}
+		
+		// draw the color clues
+		boolean[] colorClues = card.getColorClues();
+		boolean drawn = false;
+		tiley = 0;
+		
+		for (int i = 0; i < colorClues.length - 1; i++) {
+			if (colorClues[i]) {
+				drawn = true;
+				g.drawImage(clueImages,
+					x, y, x + cardSize.width, y + cardSize.height,
+					i*cardSize.width, tiley*cardSize.height,
+					(i+1)*cardSize.width, (tiley+1)*cardSize.height,
+					null);
+			}
+		}
+		if (!drawn) { // then known rainbow
+			g.drawImage(clueImages,
+				x, y, x + cardSize.width, y + cardSize.height,
+				5*cardSize.width, tiley*cardSize.height,
+				6*cardSize.width, (tiley+1)*cardSize.height,
+				null);
+		}
 	}
 
 	@Override
