@@ -66,6 +66,8 @@ public class GameState implements Serializable {
 	}
 
 	public void dealInitialHands(int numPlayers) {
+		for (int i = 0; i < numPlayers; i++)
+			hands.add(new ArrayList<Card>());
 		if (numPlayers < 4) {
 			for (int player = 0; player < numPlayers; player++)
 				for (int numCards = 0; numCards < 5; numCards++)
@@ -120,5 +122,9 @@ public class GameState implements Serializable {
 
 	public void updatePlayer() {
 		currPlayer++;
+	}
+
+	public static void main(String... args) {
+		
 	}
 }

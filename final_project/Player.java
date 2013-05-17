@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
 public class Player extends Thread {
@@ -35,31 +36,32 @@ public class Player extends Thread {
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
 		gameComp = new GameComponent(playerNum, gameState);
-		
+
 		try {
 			socket = new Socket(serverIP, portNumber);
 			input = new ObjectInputStream(socket.getInputStream());
 			output = new ObjectOutputStream(socket.getOutputStream());
 			this.playerNum = input.readInt();
-			System.out.println("Player num " +  playerNum);
+			System.out.println("Player num " + playerNum);
+			
+			JFrame gameFrame = new JFrame("Hanabi: Player " + playerNum);
+			gameFrame.add(gameComp);
+			gameFrame.pack();
+			gameFrame.setVisible(true);
+			gameFrame.setResizable(false);
+			gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		} catch (IOException ioex) {
+			JOptionPane connFailed = new JOptionPane(
+					"connection failed: wrong port number or server ip address!",
+					JOptionPane.ERROR_MESSAGE);
+			connFailed.setVisible(true);
 			System.out
 					.println("connection failed: wrong port number or server ip address!");
 			ioex.printStackTrace();
 		}
-		JFrame gameFrame = new JFrame("Hanabi: Player " + playerNum);
-		gameFrame.add(gameComp);
-		gameFrame.pack();
-		gameFrame.setVisible(true);
-		gameFrame.setResizable(false);
-		gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Thread#run()
-	 */
 	@Override
 	public void run() {
 		while (socket.isConnected()) {

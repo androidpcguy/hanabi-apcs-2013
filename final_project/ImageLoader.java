@@ -20,7 +20,7 @@ public final class ImageLoader {
 	public static final int CLUE_IMAGES = 1;
 
 	// TODO: fix this
-	private static final String PATHNAME = "C:\\users\\akshara\\desktop\\final project\\svn\\branches\\workspace\\images\\";
+	private static final String PATHNAME = "C:\\users\\bala.usha.18\\desktop\\final project\\svn\\branches\\workspace\\images\\";
 
 	private static final String[] FILENAMES = { "CardImages.png",
 			"ClueImages.png" };

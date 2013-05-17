@@ -104,7 +104,7 @@ public class GameStarter extends JFrame implements ActionListener {
 	
 	public void gameStart(int numPlayers, boolean rainbow, boolean startGame,
 			int port, String serverIP) {
-			//TODO: 
+		
 		if (startGame) {
 			GameState gameState = new GameState(numPlayers, rainbow);
 			Server server = new Server(gameState, port);
