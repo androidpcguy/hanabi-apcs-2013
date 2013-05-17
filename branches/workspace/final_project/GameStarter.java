@@ -2,7 +2,7 @@ package final_project;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;;
+import javax.swing.*;
 
 //shows menu before starting game for ip addresses and port number for clients
 /**
