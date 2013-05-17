@@ -8,9 +8,6 @@ public class GameState {
 	private static final CardColor[] CARD_COLORS = { RED, PURPLE, BLUE, BLACK,
 			GREEN, RAINBOW };
 
-	private static final ArrayList<CardColor> COLORS = new ArrayList<CardColor>(
-			Arrays.asList(CARD_COLORS));
-
 	private ArrayList<List<Card>> hands;
 
 	private Stack<Card> deck;
