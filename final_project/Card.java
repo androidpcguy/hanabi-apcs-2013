@@ -1,6 +1,6 @@
 package final_project;
 
-public class Card {
+public class Card implements java.io.Serializable {
 
 	private int number;
 
@@ -25,7 +25,6 @@ public class Card {
 		for (int i = 0; i < 5; i++)
 			numberClues[i] = true;
 	}
-
 
 	public void giveNumberClue(int number) {
 		if (this.number != number) {
@@ -64,7 +63,6 @@ public class Card {
 	public boolean[] getNumberClues() {
 		return numberClues;
 	}
-	
 
 	public int getNumber() {
 		return number;

@@ -104,23 +104,27 @@ public class GameStarter extends JFrame implements ActionListener {
 	
 	public void gameStart(int numPlayers, boolean rainbow, boolean startGame,
 			int port, String serverIP) {
-		GameState gameState = new GameState(numPlayers, rainbow);
+			//TODO: 
 		if (startGame) {
+			GameState gameState = new GameState(numPlayers, rainbow);
 			Server server = new Server(gameState, port);
 			server.start();
 		}
-		Player client = new Player(port, serverIP, gameState);
+		Player client = new Player(port, serverIP, null);
 		client.start();
 	}
 
 	public static void main(String[] args) {
+		ImageLoader.loadImages();
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
+				
 				new GameStarter();
 			}
 		});
+		//System.out.println(System.getProperty("user.dir"));
 	}
 
 	@Override

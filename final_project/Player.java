@@ -41,6 +41,7 @@ public class Player extends Thread {
 			input = new ObjectInputStream(socket.getInputStream());
 			output = new ObjectOutputStream(socket.getOutputStream());
 			this.playerNum = input.readInt();
+			System.out.println("Player num " +  playerNum);
 		} catch (IOException ioex) {
 			System.out
 					.println("connection failed: wrong port number or server ip address!");

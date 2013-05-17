@@ -19,7 +19,8 @@ public final class ImageLoader {
 	/** Images for card clues. */
 	public static final int CLUE_IMAGES = 1;
 
-	private static final String PATHNAME = "images/";
+	// TODO: fix this
+	private static final String PATHNAME = "C:\\users\\akshara\\desktop\\final project\\svn\\branches\\workspace\\images\\";
 
 	private static final String[] FILENAMES = { "CardImages.png",
 			"ClueImages.png" };
@@ -33,7 +34,9 @@ public final class ImageLoader {
 	private static Image[] images = new Image[FILENAMES.length];
 
 	// no instantiation
-	private ImageLoader() {}
+	private ImageLoader() {
+
+	}
 
 	/**
 	 * Loads all images. This only needs to be called once.
@@ -43,6 +46,7 @@ public final class ImageLoader {
 			loadImagesFromFile();
 		} catch (IOException ioe) {
 			try {
+				ioe.printStackTrace();
 				loadImagesFromJar();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -53,6 +57,7 @@ public final class ImageLoader {
 
 	private static void loadImagesFromFile() throws IOException {
 		for (int i = 0; i < FILENAMES.length; i++) {
+			System.out.println(PATHNAME + FILENAMES[i]);
 			images[i] = ImageIO.read(new File(PATHNAME + FILENAMES[i]));
 		}
 	}

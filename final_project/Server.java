@@ -34,8 +34,8 @@ public class Server extends Thread {
 	public void run() {
 		connect(gameState.getNumPlayers());
 		while (allAreConnected()) {
-			getNewGameState();
 			sendNewGameState();
+			getNewGameState();
 		}
 	}
 
@@ -63,10 +63,10 @@ public class Server extends Thread {
 	public void connect(int numConnections) {
 		try {
 			for (int x = 0; x < numConnections; x++) {
-				clients.add(server.accept());
-				output.add(new ObjectOutputStream(clients.get(x)
-						.getOutputStream()));
-				input.add(new ObjectInputStream(clients.get(x).getInputStream()));
+				Socket client = server.accept();
+				clients.add(client);
+				output.add(new ObjectOutputStream(client.getOutputStream()));
+				input.add(new ObjectInputStream(client.getInputStream()));
 				output.get(x).writeInt(x);
 			}
 		} catch (IOException ioex) {
@@ -77,9 +77,11 @@ public class Server extends Thread {
 	public boolean allAreConnected() {
 		for (int x = 0; x < clients.size(); x++) {
 			if (!clients.get(x).isConnected()) {
+				System.out.println("false");
 				return false;
 			}
 		}
+		System.out.println("true");
 		return true;
 	}
 }

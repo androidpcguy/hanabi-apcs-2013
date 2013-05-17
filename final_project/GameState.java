@@ -2,8 +2,9 @@ package final_project;
 
 import static final_project.CardColor.*;
 import java.util.*;
+import java.io.Serializable;
 
-public class GameState {
+public class GameState implements Serializable {
 
 	private static final CardColor[] CARD_COLORS = { RED, PURPLE, BLUE, BLACK,
 			GREEN, RAINBOW };
@@ -32,6 +33,7 @@ public class GameState {
 		numCards = rainbow ? 60 : 50;
 		createDeck();
 		hands = new ArrayList<List<Card>>();
+		dealInitialHands(numPlayers);
 		numClues = TOTAL_CLUES;
 		numLives = TOTAL_LIVES;
 
@@ -61,6 +63,17 @@ public class GameState {
 
 	public void dealCard(int playerNum) {
 		hands.get(playerNum).add(deck.pop());
+	}
+
+	public void dealInitialHands(int numPlayers) {
+		if (numPlayers < 4) {
+			for (int player = 0; player < numPlayers; player++)
+				for (int numCards = 0; numCards < 5; numCards++)
+					dealCard(player);
+		} else
+			for (int player = 0; player < numPlayers; player++)
+				for (int numCards = 0; numCards < 4; numCards++)
+					dealCard(player);
 	}
 
 	/**
