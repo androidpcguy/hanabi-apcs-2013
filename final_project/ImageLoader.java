@@ -15,28 +15,31 @@ public final class ImageLoader {
 
 	/** Images for card fronts. */
 	public static final int CARD_IMAGES = 0;
-
+	
 	/** Images for card clues. */
 	public static final int CLUE_IMAGES = 1;
-
-	// TODO: fix this
-	private static final String PATHNAME = "C:\\users\\bala.usha.18\\desktop\\final project\\svn\\branches\\workspace\\images\\";
-
-	private static final String[] FILENAMES = { "CardImages.png",
-			"ClueImages.png" };
-
-	private static final Dimension[] TILE_COUNT = { new Dimension(7, 5),
-			new Dimension(6, 2) };
-
-	private static final Dimension[] TILE_SIZE = { new Dimension(80, 120),
-			new Dimension(80, 120) };
-
+	
+	private static final String PATHNAME = "images";
+	
+	private static final String[] FILENAMES = {
+		"/CardImages.png",
+		"/ClueImages.png"
+	};
+	
+	private static final Dimension[] TILE_COUNT = {
+		new Dimension(7, 5),
+		new Dimension(6, 2)
+	};
+	
+	private static final Dimension[] TILE_SIZE = {
+		new Dimension(80, 120),
+		new Dimension(80, 120)
+	};
+	
 	private static Image[] images = new Image[FILENAMES.length];
-
+	
 	// no instantiation
-	private ImageLoader() {
-
-	}
+	private ImageLoader() {}
 
 	/**
 	 * Loads all images. This only needs to be called once.
