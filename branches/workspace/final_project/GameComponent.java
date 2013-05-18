@@ -10,11 +10,14 @@ import java.util.List;
 
 import javax.swing.*;
 
+/**
+ * Knows how to draw a GameState. Each client has one of these.
+ */
 public class GameComponent extends JComponent implements MouseListener {
 
-	private static final Color HAND_BG = new Color(0xffff80);
+	private static final Color HAND_BG = new Color(0xb0b080);
 
-	private static final Color THIS_HAND_BG = new Color(0x6060ff);
+	private static final Color THIS_HAND_BG = new Color(0x8080ff);
 
 	private GameState gameState;
 
@@ -22,28 +25,52 @@ public class GameComponent extends JComponent implements MouseListener {
 
 	private boolean myTurn = false;
 
+	/**
+	 * Creates a new GameComponent.
+	 * 
+	 * @param playerNum
+	 *            which player this component is for
+	 * @param gameState
+	 *            the default game state; this can be null
+	 */
 	public GameComponent(int playerNum, GameState gameState) {
 		this.gameState = gameState;
 		this.playerNum = playerNum;
 		this.setPreferredSize(new Dimension(800, 600));
 	}
 
+	/**
+	 * Returns the current GameState.
+	 * 
+	 * @return the game state
+	 */
 	public GameState getGameState() {
 		return gameState;
 	}
 
+	/**
+	 * Updates the current GameState.
+	 * 
+	 * @param gameState the new game state
+	 */
 	public void updateGame(GameState gameState) {
 		this.gameState = gameState;
 		repaint();
 	}
 
+	/**
+	 * Tells this component that it is this player's turn.
+	 */
 	public void play() {
 		myTurn = true;
-		// TODO: let the character do something and updates gameState, also need
-		// to redraw after, remember to gameState.currPlayer++
 		gameState.updatePlayer();
 	}
 
+	/**
+	 * Returns whether or not this player has finished his or her turn.
+	 * 
+	 * @return true if done, false if still playing
+	 */
 	public boolean doneWithTurn() {
 		return !myTurn;
 	}

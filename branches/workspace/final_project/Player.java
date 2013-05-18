@@ -32,10 +32,10 @@ public class Player extends Thread {
 	 * @param serverIP
 	 *            IP Address of server
 	 * @param gameState
+	 *            the game state
 	 */
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
-		gameComp = new GameComponent(playerNum, gameState);
 
 		try {
 			socket = new Socket(serverIP, portNumber);
@@ -43,6 +43,8 @@ public class Player extends Thread {
 			output = new ObjectOutputStream(socket.getOutputStream());
 			this.playerNum = input.readInt();
 			System.out.println("Player num " + playerNum);
+			
+			gameComp = new GameComponent(playerNum, gameState);
 			
 			JFrame gameFrame = new JFrame("Hanabi: Player " + playerNum);
 			gameFrame.add(gameComp);
