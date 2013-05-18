@@ -44,17 +44,17 @@ public class GameState implements Serializable {
 
 	private void createDeck() {
 		ArrayList<Card> cards = new ArrayList<Card>(numCards);
-		for (int color = 0, i = 0; color < numCards / 10; color++) {
-			cards.add(new Card(1, CARD_COLORS[color], i++));
-			cards.add(new Card(1, CARD_COLORS[color], i++));
-			cards.add(new Card(1, CARD_COLORS[color], i++));
-			cards.add(new Card(2, CARD_COLORS[color], i++));
-			cards.add(new Card(2, CARD_COLORS[color], i++));
-			cards.add(new Card(3, CARD_COLORS[color], i++));
-			cards.add(new Card(3, CARD_COLORS[color], i++));
-			cards.add(new Card(4, CARD_COLORS[color], i++));
-			cards.add(new Card(4, CARD_COLORS[color], i++));
-			cards.add(new Card(5, CARD_COLORS[color], i++));
+		for (int color = 0; color < numCards / 10; color++) {
+			cards.add(new Card(1, CARD_COLORS[color]));
+			cards.add(new Card(1, CARD_COLORS[color]));
+			cards.add(new Card(1, CARD_COLORS[color]));
+			cards.add(new Card(2, CARD_COLORS[color]));
+			cards.add(new Card(2, CARD_COLORS[color]));
+			cards.add(new Card(3, CARD_COLORS[color]));
+			cards.add(new Card(3, CARD_COLORS[color]));
+			cards.add(new Card(4, CARD_COLORS[color]));
+			cards.add(new Card(4, CARD_COLORS[color]));
+			cards.add(new Card(5, CARD_COLORS[color]));
 		}
 		deck = new Stack<Card>();
 		for (int i = 0; i < cards.size(); i++)
