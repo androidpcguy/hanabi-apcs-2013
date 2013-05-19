@@ -58,7 +58,7 @@ public class GameState implements Serializable {
 		}
 		deck = new Stack<Card>();
 		for (int i = 0; i < cards.size(); i++)
-			deck.push(cards.get((int) (Math.random() * cards.size())));
+			deck.push(cards.remove((int) (Math.random() * cards.size())));
 	}
 
 	public void dealCard(int playerNum) {
