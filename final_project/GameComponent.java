@@ -19,6 +19,7 @@ public class GameComponent extends JComponent implements MouseListener,
 	
 	private static final Color NORMAL_BG = new Color(0xffffff);
 	private static final Color HIGHLIGHT_BG = new Color(0xd0d000);
+	private static final Color CLICK_BG = new Color(0x40ff40);
 	
 	private static final int ZONE_NONE = -1;
 	private static final int ZONE_HAND1 = 0;
@@ -44,9 +45,13 @@ public class GameComponent extends JComponent implements MouseListener,
 	private int playerNum;
 
 	private boolean myTurn = false;
+	private static final Object TURN_LOCK = new Object();
 	
 	private int mouseZone = ZONE_NONE;
 	private int mouseIndex = 0;
+	
+	private int clickZone;
+	private int clickIndex;
 
 	/**
 	 * Creates a new GameComponent.
@@ -63,6 +68,8 @@ public class GameComponent extends JComponent implements MouseListener,
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
+		
+		resetClick();
 	}
 
 	/**
@@ -98,7 +105,9 @@ public class GameComponent extends JComponent implements MouseListener,
 	 * @return true if done, false if still playing
 	 */
 	public boolean doneWithTurn() {
-		return !myTurn;
+		synchronized (TURN_LOCK) {
+			return !myTurn;
+		}
 	}
 
 	@Override
@@ -127,6 +136,8 @@ public class GameComponent extends JComponent implements MouseListener,
 			g.setColor(THIS_HAND_BG);
 		} else if (index == mouseZone - ZONE_HAND1) {
 			g.setColor(HIGHLIGHT_BG);
+		} else if (index == clickZone - ZONE_HAND1) {
+			g.setColor(CLICK_BG);
 		} else {
 			g.setColor(HAND_BG);
 		}
@@ -136,6 +147,10 @@ public class GameComponent extends JComponent implements MouseListener,
 			if (index == playerNum && i == mouseIndex &&
 					index == mouseZone - ZONE_HAND1) {
 				g.setColor(HIGHLIGHT_BG);
+				g.fillRect(x + i*80, y, 80, 120);
+			} else if (index == playerNum && i == clickIndex &&
+					index == clickZone - ZONE_HAND1) {
+				g.setColor(CLICK_BG);
 				g.fillRect(x + i*80, y, 80, 120);
 			}
 			paintCard(g, hand.get(i), x + i * 80, y, known);
@@ -206,6 +221,12 @@ public class GameComponent extends JComponent implements MouseListener,
 		g.setColor(NORMAL_BG);
 		g.fillRect(x, y, BOUNDS_CLUE.width, BOUNDS_CLUE.height);
 		
+		if (clickZone == ZONE_CLUE) {
+			int tilex = clickIndex % 5;
+			int tiley = clickIndex / 5;
+			g.setColor(CLICK_BG);
+			g.fillRect(x + tilex*80, y + tiley*75, 80, 75);
+		}
 		if (mouseZone == ZONE_CLUE) {
 			int tilex = mouseIndex % 5;
 			int tiley = mouseIndex / 5;
@@ -229,21 +250,116 @@ public class GameComponent extends JComponent implements MouseListener,
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mousePressed (MouseEvent e) {
 		//TOOD mouse clicked
+		if (!myTurn) {
+			return;
+		}
+		
+		int x = e.getX();
+		int y = e.getY();
+		
+		if (isInRect(x, y, BOUNDS_HAND1)) {
+			if (clickZone == ZONE_CLUE) {
+				giveClue(clickZone, clickIndex, ZONE_HAND1, x/80);
+			} else {
+				clickZone = ZONE_HAND1;
+				clickIndex = x / 80;
+			}
+		} else if (isInRect(x, y, BOUNDS_HAND2)) {
+			if (clickZone == ZONE_CLUE) {
+				giveClue(clickZone, clickIndex, ZONE_HAND2, x/80);
+			} else {
+				clickZone = ZONE_HAND2;
+				clickIndex = x / 80;
+			}
+		} else if (isInRect(x, y, BOUNDS_HAND3)) {
+			if (clickZone == ZONE_CLUE) {
+				giveClue(clickZone, clickIndex, ZONE_HAND3, x/80);
+			} else {
+				clickZone = ZONE_HAND3;
+				clickIndex = x / 80;
+			}
+		} else if (isInRect(x, y, BOUNDS_HAND4)) {
+			if (clickZone == ZONE_CLUE) {
+				giveClue(clickZone, clickIndex, ZONE_HAND4, x/80);
+			} else {
+				clickZone = ZONE_HAND4;
+				clickIndex = x / 80;
+			}
+		} else if (isInRect(x, y, BOUNDS_HAND5)) {
+			if (clickZone == ZONE_CLUE) {
+				giveClue(clickZone, clickIndex, ZONE_HAND5, x/80);
+			} else {
+				clickZone = ZONE_HAND5;
+				clickIndex = x / 80;
+			}
+		} else if (isInRect(x, y, BOUNDS_CLUE)) {
+			if ((clickZone == ZONE_HAND1 ||
+			        clickZone == ZONE_HAND2 ||
+			        clickZone == ZONE_HAND3 ||
+			        clickZone == ZONE_HAND4 ||
+			        clickZone == ZONE_HAND5) &&
+			        playerNum != clickZone - ZONE_HAND1) {
+				giveClue(clickZone, clickIndex, ZONE_CLUE, 5*(y/75) + (x-400)/80);
+			} else {
+				clickZone = ZONE_CLUE;
+				clickIndex = 5 * (y/75) + (x-400) / 80;
+			}
+		} else if (isInRect(x, y, BOUNDS_PLAY)) {
+			//TODO click play
+		} else if (isInRect(x, y, BOUNDS_DISCARD)) {
+			//TODO click discard
+		} else {
+			resetClick();
+		}
 	}
+	
+	private void giveClue (int z1, int i1, int z2, int i2) { 
+		synchronized (TURN_LOCK) {
+			myTurn = false;
+			
+			int handIndex;
+			int clueIndex;
+			
+			// find the right indices
+			if (z1 == ZONE_CLUE) {
+				clueIndex = i1;
+				handIndex = z2 - ZONE_HAND1;
+			} else {
+				handIndex = z1 - ZONE_HAND1;
+				clueIndex = i2;
+			}
+			
+			// don't give clues to yourself
+			if (handIndex == playerNum) {
+				myTurn = true;
+				return;
+			}
+			
+			if (clueIndex < 5) {
+				// color clue
+				gameState.giveClue(handIndex, CardColor.values()[clueIndex], 0);
+			} else {
+				// number clue
+				gameState.giveClue(handIndex, null, clueIndex - 4);
+			}
+			
+			resetClick();
+		}
+	}
+	
+	@Override
+	public void mouseEntered (MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited (MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseClicked (MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e) {}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased (MouseEvent e) {}
 
 	@Override
 	public void mouseDragged (MouseEvent e) {}
@@ -340,5 +456,10 @@ public class GameComponent extends JComponent implements MouseListener,
 	private boolean isInRect (int x, int y, Rectangle rect) {
 		return x >= rect.x && x < rect.x + rect.width &&
 		       y >= rect.y && y < rect.y + rect.height;
+	}
+	
+	private void resetClick () {
+		clickZone = ZONE_NONE;
+		clickIndex = 0;
 	}
 }
