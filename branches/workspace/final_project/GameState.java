@@ -128,6 +128,10 @@ public class GameState implements Serializable {
 	public Stack<Card> getDeck() {
 		return deck;
 	}
+	
+	public boolean hasRainbow () {
+		return rainbow;
+	}
 
 	public static void main(String... args) {
 		
