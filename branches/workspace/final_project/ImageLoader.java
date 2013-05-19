@@ -19,21 +19,33 @@ public final class ImageLoader {
 	/** Images for card clues. */
 	public static final int CLUE_IMAGES = 1;
 	
+	/** Image for the clue area. */
+	public static final int CLUE_AREA = 2;
+	
+	/** Images for the play area. */
+	public static final int PLAY_AREA_IMAGES = 3;
+	
 	private static final String PATHNAME = "images";
 	
 	private static final String[] FILENAMES = {
 		"/CardImages.png",
-		"/ClueImages.png"
+		"/ClueImages.png",
+		"/ClueArea.png",
+		"/PlayAreaImages.png"
 	};
 	
 	private static final Dimension[] TILE_COUNT = {
 		new Dimension(7, 5),
-		new Dimension(6, 2)
+		new Dimension(6, 2),
+		new Dimension(1, 1),
+		new Dimension(6, 5)
 	};
 	
 	private static final Dimension[] TILE_SIZE = {
 		new Dimension(80, 120),
-		new Dimension(80, 120)
+		new Dimension(80, 120),
+		new Dimension(400, 150),
+		new Dimension(400/6, 75)
 	};
 	
 	private static Image[] images = new Image[FILENAMES.length];
