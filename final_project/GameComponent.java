@@ -39,6 +39,8 @@ public class GameComponent extends JComponent implements MouseListener,
 	private static final Rectangle BOUNDS_CLUE = new Rectangle(400, 0, 400, 150);
 	private static final Rectangle BOUNDS_PLAY = new Rectangle(400, 150, 400, 75);
 	private static final Rectangle BOUNDS_DISCARD = new Rectangle(400, 225, 400, 350);
+	
+	private Rectangle boundsMyHand;
 
 	private GameState gameState;
 
@@ -64,6 +66,7 @@ public class GameComponent extends JComponent implements MouseListener,
 	public GameComponent(int playerNum, GameState gameState) {
 		this.gameState = gameState;
 		this.playerNum = playerNum;
+		this.boundsMyHand = new Rectangle(0, playerNum*120, 400, 120);
 		this.setPreferredSize(new Dimension(800, 600));
 		
 		this.addMouseListener(this);
@@ -243,15 +246,38 @@ public class GameComponent extends JComponent implements MouseListener,
 	}
 	
 	private void paintPlayArea (Graphics g, int x, int y) {
-		//TODO play area
 		Image playImages = ImageLoader.getImage(ImageLoader.PLAY_AREA_IMAGES);
-		Dimension tiles = ImageLoader.getTileCount(ImageLoader.PLAY_AREA_IMAGES);
 		Dimension tilesize = ImageLoader.getTileSize(ImageLoader.PLAY_AREA_IMAGES);
+		
+		int[] playedCards = gameState.getPlayedCards();
+		
+		if (mouseZone == ZONE_PLAY) {
+			g.setColor(HIGHLIGHT_BG);
+		} else if (mouseZone == ZONE_PLAY) {
+			g.setColor(CLICK_BG);
+		} else {
+			g.setColor(NORMAL_BG);
+		}
+		g.fillRect(x, y, BOUNDS_PLAY.width, BOUNDS_PLAY.height);
+		g.setColor(Color.BLACK);
+		g.drawRect(x, y, BOUNDS_PLAY.width, BOUNDS_PLAY.height);
+		
+		for (int tilex = 0; tilex < playedCards.length; tilex++) {
+			if (playedCards[tilex] > 0) {
+				int tiley = playedCards[tilex] - 1;
+				g.drawImage(playImages,
+					x + tilex*tilesize.width, y,
+					x + (tilex+1)*tilesize.width, y + tilesize.height,
+					tilex*tilesize.width, tiley*tilesize.height,
+					(tilex+1)*tilesize.width, (tiley+1)*tilesize.height,
+					null);
+			}
+		}
 	}
 	
 	@Override
 	public void mousePressed (MouseEvent e) {
-		//TOOD mouse clicked
+		//TODO mouse clicked
 		if (!myTurn) {
 			return;
 		}
@@ -259,7 +285,23 @@ public class GameComponent extends JComponent implements MouseListener,
 		int x = e.getX();
 		int y = e.getY();
 		
-		if (isInRect(x, y, BOUNDS_HAND1)) {
+		//TODO this block doesn't work
+/*		if (isInRect(x, y, boundsMyHand)) {
+			//TODO discard
+			if (clickZone == ZONE_PLAY) {
+				synchronized (TURN_LOCK) {
+					gameState.playCard(
+						gameState.getHand(playerNum).remove(clickIndex));
+					gameState.dealCard(playerNum);
+					
+					myTurn = false;
+					resetClick();
+				}
+			} else {
+				mouseZone = playerNum + ZONE_HAND1;
+				mouseIndex = x / 80;
+			}
+		} else*/ if (isInRect(x, y, BOUNDS_HAND1)) {
 			if (clickZone == ZONE_CLUE) {
 				giveClue(clickZone, clickIndex, ZONE_HAND1, x/80);
 			} else {
@@ -307,7 +349,18 @@ public class GameComponent extends JComponent implements MouseListener,
 				clickIndex = 5 * (y/75) + (x-400) / 80;
 			}
 		} else if (isInRect(x, y, BOUNDS_PLAY)) {
-			//TODO click play
+			if (playerNum == clickZone - ZONE_HAND1) {
+				synchronized (TURN_LOCK) {
+					gameState.playCard(
+						gameState.getHand(playerNum).remove(clickIndex));
+					gameState.dealCard(playerNum);
+					
+					myTurn = false;
+					resetClick();
+				}
+			} else {
+				clickZone = ZONE_PLAY;
+			}
 		} else if (isInRect(x, y, BOUNDS_DISCARD)) {
 			//TODO click discard
 		} else {
