@@ -39,7 +39,6 @@ public class GameState implements Serializable {
 
 		discardPile = new ArrayList<Card>();
 		currPlayer = (int) (Math.random() * numPlayers);
-
 	}
 
 	private void createDeck() {
@@ -122,7 +121,7 @@ public class GameState implements Serializable {
 	}
 
 	public void updatePlayer() {
-		currPlayer++;
+		currPlayer = (currPlayer + 1)  % numPlayers;
 	}
 	
 	public Stack<Card> getDeck() {
@@ -131,9 +130,5 @@ public class GameState implements Serializable {
 	
 	public boolean hasRainbow () {
 		return rainbow;
-	}
-
-	public static void main(String... args) {
-		
 	}
 }
