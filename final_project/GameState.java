@@ -14,6 +14,8 @@ public class GameState implements Serializable {
 	private Stack<Card> deck;
 
 	private List<Card> discardPile;
+	
+	private int[] playedCards;
 
 	private int currPlayer;
 
@@ -36,6 +38,7 @@ public class GameState implements Serializable {
 		dealInitialHands(numPlayers);
 		numClues = TOTAL_CLUES;
 		numLives = TOTAL_LIVES;
+		playedCards = new int[6];
 
 		discardPile = new ArrayList<Card>();
 		currPlayer = (int) (Math.random() * numPlayers);
@@ -79,20 +82,41 @@ public class GameState implements Serializable {
 	}
 
 	/**
+	 * Gives a clue to a player.
+	 * 
 	 * @param playerNum
+	 *            which player receives the clue
 	 * @param color
 	 *            if color clue given, this is a valid color, else if number
 	 *            clue is given this is <tt>null</tt>
 	 * @param numOfCard
 	 *            if number clue is given, 1 <= numOfCard <= 5. else, this is 0
 	 */
-	public void giveClue(int playerNum, CardColor color, int numOfCard) {
+	public void giveClue (int playerNum, CardColor color, int numOfCard) {
 		if (color == null) {
 			for (Card card : hands.get(playerNum))
 				card.giveNumberClue(numOfCard);
 		} else {
 			for (Card card : hands.get(playerNum))
 				card.giveColorClue(color);
+		}
+		numClues--;
+	}
+	
+	public void playCard (Card card) {
+		int index = card.getColor().getIndex();
+		if (card.getNumber() == playedCards[index] + 1) {
+			playedCards[index]++;
+		} else {
+			discardPile.add(card);
+			numLives--;
+		}
+	}
+	
+	public void discardCard (Card card) {
+		discardPile.add(card);
+		if (numClues < 8) {
+			numClues++;
 		}
 	}
 
@@ -118,6 +142,10 @@ public class GameState implements Serializable {
 
 	public List<Card> getDiscardPile() {
 		return discardPile;
+	}
+	
+	public int[] getPlayedCards () {
+		return playedCards;
 	}
 
 	public void updatePlayer() {
