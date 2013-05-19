@@ -57,8 +57,9 @@ public class GameState implements Serializable {
 			cards.add(new Card(5, CARD_COLORS[color]));
 		}
 		deck = new Stack<Card>();
-		for (int i = 0; i < cards.size(); i++)
+		for (int i = 0; i < numCards; i++){
 			deck.push(cards.remove((int) (Math.random() * cards.size())));
+		}
 	}
 
 	public void dealCard(int playerNum) {
@@ -122,6 +123,10 @@ public class GameState implements Serializable {
 
 	public void updatePlayer() {
 		currPlayer++;
+	}
+	
+	public Stack<Card> getDeck() {
+		return deck;
 	}
 
 	public static void main(String... args) {
