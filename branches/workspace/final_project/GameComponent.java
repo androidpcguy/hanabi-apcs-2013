@@ -21,6 +21,10 @@ public class GameComponent extends JComponent implements MouseListener,
 	private static final Color HIGHLIGHT_BG = new Color(0xd0d000);
 	private static final Color CLICK_BG = new Color(0x40ff40);
 	
+	private static final Color PLAYED_COLOR = new Color(0x008000);
+	private static final Color DISCARDED_COLOR = new Color(0xff0000);
+	private static final Color UNSEEN_COLOR = new Color(0x404040);
+	
 	private static final int ZONE_NONE = -1;
 	private static final int ZONE_HAND1 = 0;
 	private static final int ZONE_HAND2 = 1;
@@ -38,7 +42,7 @@ public class GameComponent extends JComponent implements MouseListener,
 	private static final Rectangle BOUNDS_HAND5 = new Rectangle(0, 480, 400, 120);
 	private static final Rectangle BOUNDS_CLUE = new Rectangle(400, 0, 400, 150);
 	private static final Rectangle BOUNDS_PLAY = new Rectangle(400, 150, 400, 75);
-	private static final Rectangle BOUNDS_DISCARD = new Rectangle(400, 225, 400, 350);
+	private static final Rectangle BOUNDS_DISCARD = new Rectangle(400, 225, 400, 300);
 	
 	private Rectangle boundsMyHand;
 
@@ -115,7 +119,6 @@ public class GameComponent extends JComponent implements MouseListener,
 
 	@Override
 	public void paint(Graphics g) {
-		// TODO paint
 		if (gameState == null) {
 			return;
 		}
@@ -123,6 +126,7 @@ public class GameComponent extends JComponent implements MouseListener,
 		paintHands(g, BOUNDS_HAND1.x, BOUNDS_HAND1.y);
 		paintClueArea(g, BOUNDS_CLUE.x, BOUNDS_CLUE.y);
 		paintPlayArea(g, BOUNDS_PLAY.x, BOUNDS_PLAY.y);
+		paintDiscardArea(g, BOUNDS_DISCARD.x, BOUNDS_DISCARD.y);
 	}
 
 	private void paintHands(Graphics g, int x, int y) {
@@ -253,7 +257,7 @@ public class GameComponent extends JComponent implements MouseListener,
 		
 		if (mouseZone == ZONE_PLAY) {
 			g.setColor(HIGHLIGHT_BG);
-		} else if (mouseZone == ZONE_PLAY) {
+		} else if (clickZone == ZONE_PLAY) {
 			g.setColor(CLICK_BG);
 		} else {
 			g.setColor(NORMAL_BG);
@@ -273,6 +277,89 @@ public class GameComponent extends JComponent implements MouseListener,
 					null);
 			}
 		}
+	}
+	
+	private void paintDiscardArea (Graphics g, int x, int y) {
+		Image discardImage = ImageLoader.getImage(ImageLoader.DISCARD_AREA);
+		
+		if (mouseZone == ZONE_DISCARD) {
+			g.setColor(HIGHLIGHT_BG);
+		} else if (clickZone == ZONE_DISCARD) {
+			g.setColor(CLICK_BG);
+		} else {
+			g.setColor(NORMAL_BG);
+		}
+		g.fillRect(x, y, BOUNDS_DISCARD.width, BOUNDS_DISCARD.height);
+		g.setColor(Color.BLACK);
+		g.drawRect(x, y, BOUNDS_DISCARD.width, BOUNDS_DISCARD.height);
+		
+		g.drawImage(discardImage,
+			x, y, x + BOUNDS_DISCARD.width, y + BOUNDS_DISCARD.height,
+			0, 0, 400, 300,
+			null);
+		
+		// fill in each square
+		boolean[] seen = new boolean[60]; // all false
+		
+		// played cards
+		g.setColor(PLAYED_COLOR);
+		int[] playedCards = gameState.getPlayedCards();
+		for (int i = 0; i < playedCards.length; i++) {
+			for (int j = 1; j <= playedCards[i]; j++) {
+				int index = getIndexForCard(seen, CardColor.values()[i], j);
+				paintSquare(g, x, y, index);
+			}
+		}
+		
+		// discarded cards
+		g.setColor(DISCARDED_COLOR);
+		List<Card> discardPile = gameState.getDiscardPile();
+		for (Card c : discardPile) {
+			int index = getIndexForCard(seen, c.getColor(), c.getNumber());
+			paintSquare(g, x, y, index);
+		}
+		
+		// all other cards
+		g.setColor(UNSEEN_COLOR);
+		for (int i = 0; i < seen.length; i++) {
+			if (!seen[i]) {
+				paintSquare(g, x, y, i);
+			}
+		}
+	}
+	
+	private int getIndexForCard (boolean[] seen, CardColor color, int number) {
+		int ans = color.getIndex() * 10;
+		switch (number) {
+			case 1:
+				ans += 0;
+				break;
+			case 2:
+				ans += 3;
+				break;
+			case 3:
+				ans += 5;
+				break;
+			case 4:
+				ans += 7;
+				break;
+			case 5:
+				ans += 9;
+				break;
+		}
+		
+		while (seen[ans]) {
+			ans++;
+		}
+		
+		seen[ans] = true;
+		return ans;
+	}
+	
+	private void paintSquare (Graphics g, int bx, int by, int i) {
+		int tilex = i % 10;
+		int tiley = i / 10;
+		g.fillRect(bx + 40 + 9 + 36*tilex, by + 30 + 13 + 45*tiley, 18, 19);
 	}
 	
 	@Override
@@ -362,7 +449,18 @@ public class GameComponent extends JComponent implements MouseListener,
 				clickZone = ZONE_PLAY;
 			}
 		} else if (isInRect(x, y, BOUNDS_DISCARD)) {
-			//TODO click discard
+			if (playerNum == clickZone - ZONE_HAND1) {
+				synchronized (TURN_LOCK) {
+					gameState.discardCard(
+						gameState.getHand(playerNum).remove(clickIndex));
+					gameState.dealCard(playerNum);
+					
+					myTurn = false;
+					resetClick();
+				}
+			} else {
+				clickZone = ZONE_DISCARD;
+			}
 		} else {
 			resetClick();
 		}
