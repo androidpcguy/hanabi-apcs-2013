@@ -36,7 +36,10 @@ public class Server extends Thread {
 		while (allAreConnected()) {
 			sendNewGameState();
 			getNewGameState();
+			if(gameState.isEndOfGame())
+				break;
 		}
+		//TODO: window? for end of game
 	}
 
 	public void sendNewGameState() {
