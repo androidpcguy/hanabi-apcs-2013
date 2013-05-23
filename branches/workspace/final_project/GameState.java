@@ -14,7 +14,7 @@ public class GameState implements Serializable {
 	private Stack<Card> deck;
 
 	private List<Card> discardPile;
-	
+
 	private int[] playedCards;
 
 	private int currPlayer;
@@ -28,6 +28,8 @@ public class GameState implements Serializable {
 	private boolean rainbow;
 
 	private int numPlayers;
+
+	private int cardsPerHand;
 
 	public GameState(int numPlayers, boolean rainbow) {
 		this.rainbow = rainbow;
@@ -59,26 +61,23 @@ public class GameState implements Serializable {
 			cards.add(new Card(5, CARD_COLORS[color]));
 		}
 		deck = new Stack<Card>();
-		for (int i = 0; i < numCards; i++){
+		for (int i = 0; i < numCards; i++) {
 			deck.push(cards.remove((int) (Math.random() * cards.size())));
 		}
 	}
 
 	public void dealCard(int playerNum) {
-		hands.get(playerNum).add(deck.pop());
+		if (!deck.isEmpty())
+			hands.get(playerNum).add(deck.pop());
 	}
 
 	public void dealInitialHands(int numPlayers) {
 		for (int i = 0; i < numPlayers; i++)
 			hands.add(new ArrayList<Card>());
-		if (numPlayers < 4) {
-			for (int player = 0; player < numPlayers; player++)
-				for (int numCards = 0; numCards < 5; numCards++)
-					dealCard(player);
-		} else
-			for (int player = 0; player < numPlayers; player++)
-				for (int numCards = 0; numCards < 4; numCards++)
-					dealCard(player);
+		cardsPerHand = numPlayers < 4 ? 5 : 4;
+		for (int player = 0; player < numPlayers; player++)
+			for (int numCards = 0; numCards < cardsPerHand; numCards++)
+				dealCard(player);
 	}
 
 	/**
@@ -92,7 +91,7 @@ public class GameState implements Serializable {
 	 * @param numOfCard
 	 *            if number clue is given, 1 <= numOfCard <= 5. else, this is 0
 	 */
-	public void giveClue (int playerNum, CardColor color, int numOfCard) {
+	public void giveClue(int playerNum, CardColor color, int numOfCard) {
 		if (color == null) {
 			for (Card card : hands.get(playerNum))
 				card.giveNumberClue(numOfCard);
@@ -102,8 +101,8 @@ public class GameState implements Serializable {
 		}
 		numClues--;
 	}
-	
-	public void playCard (Card card) {
+
+	public void playCard(Card card) {
 		int index = card.getColor().getIndex();
 		if (card.getNumber() == playedCards[index] + 1) {
 			playedCards[index]++;
@@ -111,9 +110,10 @@ public class GameState implements Serializable {
 			discardPile.add(card);
 			numLives--;
 		}
+
 	}
-	
-	public void discardCard (Card card) {
+
+	public void discardCard(Card card) {
 		discardPile.add(card);
 		if (numClues < 8) {
 			numClues++;
@@ -143,20 +143,28 @@ public class GameState implements Serializable {
 	public List<Card> getDiscardPile() {
 		return discardPile;
 	}
-	
-	public int[] getPlayedCards () {
+
+	public int[] getPlayedCards() {
 		return playedCards;
 	}
 
 	public void updatePlayer() {
-		currPlayer = (currPlayer + 1)  % numPlayers;
+		currPlayer = (currPlayer + 1) % numPlayers;
 	}
-	
+
 	public Stack<Card> getDeck() {
 		return deck;
 	}
-	
-	public boolean hasRainbow () {
+
+	public boolean hasRainbow() {
 		return rainbow;
+	}
+
+	public boolean isEndOfGame() {
+		if (numLives == 0) return true;
+		for (List<Card> hand : hands)
+			if (hand.size() == cardsPerHand)
+				return false;
+		return true;
 	}
 }

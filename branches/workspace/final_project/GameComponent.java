@@ -127,6 +127,7 @@ public class GameComponent extends JComponent implements MouseListener,
 		paintClueArea(g, BOUNDS_CLUE.x, BOUNDS_CLUE.y);
 		paintPlayArea(g, BOUNDS_PLAY.x, BOUNDS_PLAY.y);
 		paintDiscardArea(g, BOUNDS_DISCARD.x, BOUNDS_DISCARD.y);
+		paintFooter(g, 400, 525);
 	}
 
 	private void paintHands(Graphics g, int x, int y) {
@@ -328,6 +329,10 @@ public class GameComponent extends JComponent implements MouseListener,
 		}
 	}
 	
+	private void paintFooter(Graphics g, int x, int y) {
+		//TODO: paint which player's turn, number of clues and lives
+	}
+	
 	private int getIndexForCard (boolean[] seen, CardColor color, int number) {
 		int ans = color.getIndex() * 10;
 		switch (number) {
@@ -468,6 +473,8 @@ public class GameComponent extends JComponent implements MouseListener,
 	
 	private void giveClue (int z1, int i1, int z2, int i2) { 
 		synchronized (TURN_LOCK) {
+			if(gameState.getNumClues()==0)
+				return;
 			myTurn = false;
 			
 			int handIndex;

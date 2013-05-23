@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -46,7 +47,7 @@ public class Player extends Thread {
 			
 			gameComp = new GameComponent(playerNum, gameState);
 			
-			JFrame gameFrame = new JFrame("Hanabi: Player " + playerNum);
+			JFrame gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1) );
 			gameFrame.add(gameComp);
 			gameFrame.pack();
 			gameFrame.setVisible(true);
