@@ -36,11 +36,10 @@ public class Server extends Thread {
 		while (allAreConnected()) {
 			sendNewGameState();
 			getNewGameState();
-			if(gameState.isEndOfGame())
-				break;
 		}
-		//TODO: window? for end of game
 	}
+
+	
 
 	public void sendNewGameState() {
 		try {
@@ -66,7 +65,9 @@ public class Server extends Thread {
 	public void connect(int numConnections) {
 		try {
 			for (int x = 0; x < numConnections; x++) {
+				System.out.println("1");
 				Socket client = server.accept();
+				System.out.println("2");
 				clients.add(client);
 				output.add(new ObjectOutputStream(client.getOutputStream()));
 				input.add(new ObjectInputStream(client.getInputStream()));

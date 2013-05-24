@@ -1,5 +1,7 @@
 package final_project;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,6 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
@@ -37,17 +40,18 @@ public class Player extends Thread {
 	 */
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
-
+		System.out.println(serverIP);
 		try {
 			socket = new Socket(serverIP, portNumber);
+			System.out.println(portNumber);
 			input = new ObjectInputStream(socket.getInputStream());
 			output = new ObjectOutputStream(socket.getOutputStream());
 			this.playerNum = input.readInt();
 			System.out.println("Player num " + playerNum);
-			
+
 			gameComp = new GameComponent(playerNum, gameState);
-			
-			JFrame gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1) );
+
+			JFrame gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1));
 			gameFrame.add(gameComp);
 			gameFrame.pack();
 			gameFrame.setVisible(true);
@@ -82,12 +86,35 @@ public class Player extends Thread {
 					this.gameState = gameComp.getGameState();
 					output.writeObject(gameState);
 				}
+				if (gameState.isEndOfGame()) {
+					showGameEnd();
+					break;
+				}
 			} catch (ClassNotFoundException cnfex) {
 				cnfex.printStackTrace();
 			} catch (IOException ioex) {
 				ioex.printStackTrace();
 			}
 		}
+	}
+
+	private void showGameEnd() {
+		JFrame frame = new JFrame();
+		JLabel label = new JLabel("Score: " + getScore());
+		frame.setLayout(new BorderLayout());
+		frame.add(label, BorderLayout.CENTER);
+		frame.setSize(new Dimension(100, 50));
+		frame.setVisible(true);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	}
+
+	private int getScore() {
+		int[] playedCards = gameState.getPlayedCards();
+		int score = 0;
+		for (int i : playedCards)
+			score += i;
+		return score;
 	}
 
 	/**
