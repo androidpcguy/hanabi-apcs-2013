@@ -30,10 +30,13 @@ public class GameState implements Serializable {
 	private int numPlayers;
 
 	private int cardsPerHand;
+	
+	private int numPoints;
 
 	public GameState(int numPlayers, boolean rainbow) {
 		this.rainbow = rainbow;
 		this.numPlayers = numPlayers;
+		numPoints = 0;
 		numCards = rainbow ? 60 : 50;
 		createDeck();
 		hands = new ArrayList<List<Card>>();
@@ -158,6 +161,10 @@ public class GameState implements Serializable {
 
 	public boolean hasRainbow() {
 		return rainbow;
+	}
+	
+	public int getNumPoints() {
+		return numPoints;
 	}
 
 	public boolean isEndOfGame() {
