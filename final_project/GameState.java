@@ -32,6 +32,10 @@ public class GameState implements Serializable {
 	private int cardsPerHand;
 	
 	private int numPoints;
+	
+	private String[] lastMove =  {
+		"No moves yet.", ""
+	};
 
 	public GameState(int numPlayers, boolean rainbow) {
 		this.rainbow = rainbow;
@@ -95,12 +99,15 @@ public class GameState implements Serializable {
 	 *            if number clue is given, 1 <= numOfCard <= 5. else, this is 0
 	 */
 	public void giveClue(int playerNum, CardColor color, int numOfCard) {
+		lastMove[0] = "Player " + (playerNum+1) + " received clue";
 		if (color == null) {
 			for (Card card : hands.get(playerNum))
 				card.giveNumberClue(numOfCard);
+			lastMove[1] = "\"" + numOfCard + "\"";
 		} else {
 			for (Card card : hands.get(playerNum))
 				card.giveColorClue(color);
+			lastMove[1] = "\"" + color + "\"";
 		}
 		numClues--;
 	}
@@ -109,11 +116,14 @@ public class GameState implements Serializable {
 		int index = card.getColor().getIndex();
 		if (card.getNumber() == playedCards[index] + 1) {
 			playedCards[index]++;
+			lastMove[0] = "Successfully played";
+			lastMove[1] = card.toString();
 		} else {
 			discardPile.add(card);
 			numLives--;
+			lastMove[0] = "Failed to play";
+			lastMove[1] = card.toString();
 		}
-
 	}
 
 	public void discardCard(Card card) {
@@ -121,6 +131,8 @@ public class GameState implements Serializable {
 		if (numClues < 8) {
 			numClues++;
 		}
+		lastMove[0] = "Discarded";
+		lastMove[1] = card.toString();
 	}
 
 	public int getCurrPlayer() {
@@ -165,6 +177,10 @@ public class GameState implements Serializable {
 	
 	public int getNumPoints() {
 		return numPoints;
+	}
+	
+	public String[] getLastMove () {
+		return lastMove;
 	}
 
 	public boolean isEndOfGame() {
