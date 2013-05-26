@@ -28,6 +28,9 @@ public final class ImageLoader {
 	/** Image for the discard area. */
 	public static final int DISCARD_AREA = 4;
 	
+	/** Image for the info area. */
+	public static final int INFO_AREA = 5;
+	
 	private static final String PATHNAME = "images";
 	
 	private static final String[] FILENAMES = {
@@ -35,7 +38,8 @@ public final class ImageLoader {
 		"/ClueImages.png",
 		"/ClueArea.png",
 		"/PlayAreaImages.png",
-		"/DiscardArea.png"
+		"/DiscardArea.png",
+		"/InfoArea.png"
 	};
 	
 	private static final Dimension[] TILE_COUNT = {
@@ -43,6 +47,7 @@ public final class ImageLoader {
 		new Dimension(6, 2),
 		new Dimension(1, 1),
 		new Dimension(6, 5),
+		new Dimension(1, 1),
 		new Dimension(1, 1)
 	};
 	
@@ -51,7 +56,8 @@ public final class ImageLoader {
 		new Dimension(80, 120),
 		new Dimension(400, 150),
 		new Dimension(400/6, 75),
-		new Dimension(400, 300)
+		new Dimension(400, 300),
+		new Dimension(400, 75)
 	};
 	
 	private static Image[] images = new Image[FILENAMES.length];
