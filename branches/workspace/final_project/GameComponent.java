@@ -25,6 +25,12 @@ public class GameComponent extends JComponent implements MouseListener,
 	private static final Color DISCARDED_COLOR = new Color(0xff0000);
 	private static final Color UNSEEN_COLOR = new Color(0x404040);
 	
+	private static final Color MY_TURN_COLOR = new Color(0x008000);
+	private static final Color OTHER_TURN_COLOR = new Color(0x000000);
+	
+	private static final Color REMAINING_COLOR = new Color(0x000000);
+	private static final Color NO_MORE_COLOR = new Color(0xff0000);
+	
 	private static final int ZONE_NONE = -1;
 	private static final int ZONE_HAND1 = 0;
 	private static final int ZONE_HAND2 = 1;
@@ -44,7 +50,8 @@ public class GameComponent extends JComponent implements MouseListener,
 	private static final Rectangle BOUNDS_PLAY = new Rectangle(400, 150, 400, 75);
 	private static final Rectangle BOUNDS_DISCARD = new Rectangle(400, 225, 400, 300);
 	
-	private Rectangle boundsMyHand;
+	private static final Font BIG_FONT = new Font(Font.MONOSPACED, Font.BOLD, 48);
+	private static final Font SMALL_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 
 	private GameState gameState;
 
@@ -70,7 +77,6 @@ public class GameComponent extends JComponent implements MouseListener,
 	public GameComponent(int playerNum, GameState gameState) {
 		this.gameState = gameState;
 		this.playerNum = playerNum;
-		this.boundsMyHand = new Rectangle(0, playerNum*120, 400, 120);
 		this.setPreferredSize(new Dimension(800, 600));
 		
 		this.addMouseListener(this);
@@ -127,7 +133,7 @@ public class GameComponent extends JComponent implements MouseListener,
 		paintClueArea(g, BOUNDS_CLUE.x, BOUNDS_CLUE.y);
 		paintPlayArea(g, BOUNDS_PLAY.x, BOUNDS_PLAY.y);
 		paintDiscardArea(g, BOUNDS_DISCARD.x, BOUNDS_DISCARD.y);
-		paintFooter(g, 400, 525);
+		paintInfoArea(g, 400, 525);
 	}
 
 	private void paintHands(Graphics g, int x, int y) {
@@ -329,8 +335,38 @@ public class GameComponent extends JComponent implements MouseListener,
 		}
 	}
 	
-	private void paintFooter(Graphics g, int x, int y) {
-		//TODO: paint which player's turn, number of clues and lives
+	private void paintInfoArea (Graphics g, int x, int y) {
+		Image infoImage = ImageLoader.getImage(ImageLoader.INFO_AREA);
+		Dimension imageSize = ImageLoader.getTileSize(ImageLoader.INFO_AREA);
+		
+		g.drawImage(infoImage,
+			x, y, x + imageSize.width, y + imageSize.height,
+			0, 0, imageSize.width, imageSize.height,
+			null);
+		
+		g.setFont(BIG_FONT);
+		
+		// current player
+		int currPlayer = gameState.getCurrPlayer();
+		g.setColor(currPlayer == playerNum ? MY_TURN_COLOR : OTHER_TURN_COLOR);
+		g.drawString("" + (currPlayer+1), x + 10, y + 65);
+		
+		// clues
+		int clues = gameState.getNumClues();
+		g.setColor(clues == 0 ? NO_MORE_COLOR : REMAINING_COLOR);
+		g.drawString("" + clues, x + 55, y + 65);
+		
+		// lives
+		int lives = gameState.getNumLives();
+		g.setColor(lives == 0 ? NO_MORE_COLOR : REMAINING_COLOR);
+		g.drawString("" + lives, x + 100, y + 65);
+		
+		// last move
+		String[] lastMove = gameState.getLastMove();
+		g.setColor(Color.BLACK);
+		g.setFont(SMALL_FONT);
+		g.drawString(lastMove[0], x + 145, y + 35);
+		g.drawString(lastMove[1], x + 145, y + 65);
 	}
 	
 	private int getIndexForCard (boolean[] seen, CardColor color, int number) {
@@ -369,7 +405,6 @@ public class GameComponent extends JComponent implements MouseListener,
 	
 	@Override
 	public void mousePressed (MouseEvent e) {
-		//TODO mouse clicked
 		if (!myTurn) {
 			return;
 		}
@@ -377,23 +412,7 @@ public class GameComponent extends JComponent implements MouseListener,
 		int x = e.getX();
 		int y = e.getY();
 		
-		//TODO this block doesn't work
-/*		if (isInRect(x, y, boundsMyHand)) {
-			//TODO discard
-			if (clickZone == ZONE_PLAY) {
-				synchronized (TURN_LOCK) {
-					gameState.playCard(
-						gameState.getHand(playerNum).remove(clickIndex));
-					gameState.dealCard(playerNum);
-					
-					myTurn = false;
-					resetClick();
-				}
-			} else {
-				mouseZone = playerNum + ZONE_HAND1;
-				mouseIndex = x / 80;
-			}
-		} else*/ if (isInRect(x, y, BOUNDS_HAND1)) {
+		if (isInRect(x, y, BOUNDS_HAND1)) {
 			if (clickZone == ZONE_CLUE) {
 				giveClue(clickZone, clickIndex, ZONE_HAND1, x/80);
 			} else {

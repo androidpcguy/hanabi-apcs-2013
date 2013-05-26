@@ -121,6 +121,6 @@ public class Card implements java.io.Serializable {
 	
 	@Override
 	public String toString() {
-		return "Number: " + number + " Color: " + color;
+		return color + " " + number;
 	}
 }

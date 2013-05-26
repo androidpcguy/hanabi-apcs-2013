@@ -84,7 +84,6 @@ public final class ImageLoader {
 
 	private static void loadImagesFromFile() throws IOException {
 		for (int i = 0; i < FILENAMES.length; i++) {
-			System.out.println(PATHNAME + FILENAMES[i]);
 			images[i] = ImageIO.read(new File(PATHNAME + FILENAMES[i]));
 		}
 	}
