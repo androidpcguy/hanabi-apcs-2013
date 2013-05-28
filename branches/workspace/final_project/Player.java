@@ -40,14 +40,11 @@ public class Player extends Thread {
 	 */
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
-		System.out.println(serverIP);
 		try {
 			socket = new Socket(serverIP, portNumber);
-			System.out.println(portNumber);
 			input = new ObjectInputStream(socket.getInputStream());
 			output = new ObjectOutputStream(socket.getOutputStream());
 			this.playerNum = input.readInt();
-			System.out.println("Player num " + playerNum);
 
 			gameComp = new GameComponent(playerNum, gameState);
 
@@ -62,7 +59,7 @@ public class Player extends Thread {
 					"connection failed: wrong port number or server ip address!",
 					JOptionPane.ERROR_MESSAGE);
 			connFailed.setVisible(true);
-			System.out
+			System.err
 					.println("connection failed: wrong port number or server ip address!");
 			ioex.printStackTrace();
 		}

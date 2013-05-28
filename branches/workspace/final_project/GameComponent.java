@@ -101,6 +101,7 @@ public class GameComponent extends JComponent implements MouseListener,
 	 */
 	public void updateGame(GameState gameState) {
 		this.gameState = gameState;
+		
 		repaint();
 	}
 
@@ -109,7 +110,6 @@ public class GameComponent extends JComponent implements MouseListener,
 	 */
 	public void play() {
 		myTurn = true;
-		gameState.updatePlayer();
 	}
 
 	/**
@@ -119,6 +119,8 @@ public class GameComponent extends JComponent implements MouseListener,
 	 */
 	public boolean doneWithTurn() {
 		synchronized (TURN_LOCK) {
+			if(!myTurn)
+				gameState.updatePlayer();
 			return !myTurn;
 		}
 	}

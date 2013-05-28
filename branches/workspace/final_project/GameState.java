@@ -6,6 +6,11 @@ import java.io.Serializable;
 
 public class GameState implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2642437239483764855L;
+
 	private static final CardColor[] CARD_COLORS = { RED, PURPLE, BLUE, BLACK,
 			GREEN, RAINBOW };
 
