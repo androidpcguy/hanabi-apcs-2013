@@ -124,7 +124,6 @@ public class GameStarter extends JFrame implements ActionListener {
 				new GameStarter();
 			}
 		});
-		//System.out.println(System.getProperty("user.dir"));
 	}
 
 	@Override
@@ -139,7 +138,7 @@ public class GameStarter extends JFrame implements ActionListener {
 			
 			boolean rainbow = rainbowCheckBox.isSelected();
 			
-			int port = Integer.parseInt(portNumberField.getText());
+			int port =Integer.parseInt(portNumberField.getText());
 			
 			String serverIP = serverIPField.getText();
 			
