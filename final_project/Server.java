@@ -4,6 +4,12 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * This is the server for the game. It is the manager of clients
+ * @author Akshara B, Albert H, Henry W
+ * @version 5828.965259.6.52.5.63.63.6.6.1.001.12
+ * 
+ */
 public class Server extends Thread {
 
 	private ArrayList<Socket> clients;
@@ -16,6 +22,11 @@ public class Server extends Thread {
 
 	private ArrayList<ObjectInputStream> input;
 
+	/**
+	 * Constructs a new <
+	 * @param gameState
+	 * @param port
+	 */
 	public Server(GameState gameState, int port) {
 		this.gameState = gameState;
 		this.clients = new ArrayList<Socket>();

@@ -35,12 +35,12 @@ public class GameState implements Serializable {
 	private int numPlayers;
 
 	private int cardsPerHand;
-	
+
 	private int numPoints;
-	
-	private String[] lastMove =  {
-		"No moves yet.", ""
-	};
+
+	private int gameEndPlayer;
+
+	private String[] lastMove = { "No moves yet.", "" };
 
 	public GameState(int numPlayers, boolean rainbow) {
 		this.rainbow = rainbow;
@@ -56,6 +56,7 @@ public class GameState implements Serializable {
 
 		discardPile = new ArrayList<Card>();
 		currPlayer = (int) (Math.random() * numPlayers);
+		gameEndPlayer = -1;
 	}
 
 	private void createDeck() {
@@ -78,9 +79,12 @@ public class GameState implements Serializable {
 		}
 	}
 
-	public void dealCard(int playerNum) {
-		if (!deck.isEmpty())
+	public boolean dealCard(int playerNum) {
+		if (!deck.isEmpty()) {
 			hands.get(playerNum).add(deck.pop());
+		}
+		return !deck.isEmpty();
+
 	}
 
 	public void dealInitialHands(int numPlayers) {
@@ -104,7 +108,7 @@ public class GameState implements Serializable {
 	 *            if number clue is given, 1 <= numOfCard <= 5. else, this is 0
 	 */
 	public void giveClue(int playerNum, CardColor color, int numOfCard) {
-		lastMove[0] = "Player " + (playerNum+1) + " received clue";
+		lastMove[0] = "Player " + (playerNum + 1) + " received clue";
 		if (color == null) {
 			for (Card card : hands.get(playerNum))
 				card.giveNumberClue(numOfCard);
@@ -123,6 +127,8 @@ public class GameState implements Serializable {
 			playedCards[index]++;
 			lastMove[0] = "Successfully played";
 			lastMove[1] = card.toString();
+			if (card.getNumber() == 5 && numClues != 8)
+				numClues++;
 		} else {
 			discardPile.add(card);
 			numLives--;
@@ -179,20 +185,28 @@ public class GameState implements Serializable {
 	public boolean hasRainbow() {
 		return rainbow;
 	}
-	
+
 	public int getNumPoints() {
 		return numPoints;
 	}
-	
-	public String[] getLastMove () {
+
+	public String[] getLastMove() {
 		return lastMove;
 	}
 
+	public int getGameEndPlayer() {
+		return gameEndPlayer;
+	}
+
+	public void setGameEndPlayer(int newPlayer) {
+		gameEndPlayer = newPlayer;
+	}
+
 	public boolean isEndOfGame() {
-		if (numLives == 0) return true;
-		for (List<Card> hand : hands)
-			if (hand.size() == cardsPerHand)
-				return false;
-		return true;
+		if (numLives == 0)
+			return true;
+		if (currPlayer == gameEndPlayer)
+			return true;
+		return false;
 	}
 }

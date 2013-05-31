@@ -110,6 +110,7 @@ public class GameComponent extends JComponent implements MouseListener,
 	 */
 	public void play() {
 		myTurn = true;
+		Toolkit.getDefaultToolkit().beep();
 	}
 
 	/**
@@ -479,7 +480,8 @@ public class GameComponent extends JComponent implements MouseListener,
 				synchronized (TURN_LOCK) {
 					gameState.discardCard(
 						gameState.getHand(playerNum).remove(clickIndex));
-					gameState.dealCard(playerNum);
+					if(!gameState.dealCard(playerNum) && gameState.getGameEndPlayer()==-1)
+						gameState.setGameEndPlayer(playerNum);
 					
 					myTurn = false;
 					resetClick();
