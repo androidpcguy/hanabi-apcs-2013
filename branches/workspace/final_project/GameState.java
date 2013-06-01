@@ -42,6 +42,10 @@ public class GameState implements Serializable {
 
 	private String[] lastMove = { "No moves yet.", "" };
 
+	/**
+	 * @param numPlayers
+	 * @param rainbow
+	 */
 	public GameState(int numPlayers, boolean rainbow) {
 		this.rainbow = rainbow;
 		this.numPlayers = numPlayers;
@@ -59,6 +63,9 @@ public class GameState implements Serializable {
 		gameEndPlayer = -1;
 	}
 
+	/**
+	 * Creates the deck TODO
+	 */
 	private void createDeck() {
 		ArrayList<Card> cards = new ArrayList<Card>(numCards);
 		for (int color = 0; color < numCards / 10; color++) {
@@ -79,14 +86,12 @@ public class GameState implements Serializable {
 		}
 	}
 
-	public boolean dealCard(int playerNum) {
-		if (!deck.isEmpty()) {
-			hands.get(playerNum).add(deck.pop());
-		}
-		return !deck.isEmpty();
-
-	}
-
+	/**
+	 * Deals cards to all the players.
+	 * 
+	 * @param numPlayers
+	 *            number of players
+	 */
 	public void dealInitialHands(int numPlayers) {
 		for (int i = 0; i < numPlayers; i++)
 			hands.add(new ArrayList<Card>());
@@ -94,6 +99,20 @@ public class GameState implements Serializable {
 		for (int player = 0; player < numPlayers; player++)
 			for (int numCards = 0; numCards < cardsPerHand; numCards++)
 				dealCard(player);
+	}
+
+	/**
+	 * Deals a card to a given player given by the index.
+	 * 
+	 * @param playerNum
+	 *            player to deal cards to
+	 * @return true if deck not empty, false otherwise
+	 */
+	public boolean dealCard(int playerNum) {
+		if (!deck.isEmpty()) {
+			hands.get(playerNum).add(deck.pop());
+		}
+		return !deck.isEmpty();
 	}
 
 	/**
@@ -121,6 +140,13 @@ public class GameState implements Serializable {
 		numClues--;
 	}
 
+	/**
+	 * Plays the given card. If successful, plays it, else added to discard pile
+	 * and one life lost.
+	 * 
+	 * @param card
+	 *            card to play
+	 */
 	public void playCard(Card card) {
 		int index = card.getColor().getIndex();
 		if (card.getNumber() == playedCards[index] + 1) {
@@ -137,6 +163,12 @@ public class GameState implements Serializable {
 		}
 	}
 
+	/**
+	 * Discards the given card
+	 * 
+	 * @param card
+	 *            card to discard
+	 */
 	public void discardCard(Card card) {
 		discardPile.add(card);
 		if (numClues < 8) {
@@ -202,11 +234,16 @@ public class GameState implements Serializable {
 		gameEndPlayer = newPlayer;
 	}
 
+	/**
+	 * Determines if it is the end of the game.
+	 * 
+	 * @return true if no lives left or <tt>currPlayer == gameEndPlayer</tt>
+	 */
 	public boolean isEndOfGame() {
-		if (numLives == 0)
-			return true;
-		if (currPlayer == gameEndPlayer)
-			return true;
-		return false;
+		/*
+		 * if (numLives == 0) return true; if (currPlayer == gameEndPlayer)
+		 * return true; return false;
+		 */
+		return numLives == 0 || currPlayer == gameEndPlayer;
 	}
 }

@@ -6,6 +6,11 @@ package final_project;
  */
 public class Card implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4838007413477505493L;
+
 	private int number;
 
 	private CardColor color;
