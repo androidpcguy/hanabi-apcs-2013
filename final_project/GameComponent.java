@@ -114,7 +114,8 @@ public class GameComponent extends JComponent implements MouseListener,
 	}
 
 	/**
-	 * Returns whether or not this player has finished his or her turn.
+	 * Returns whether or not this player has finished his or her turn. 
+	 * Also updates player in gameState.
 	 * 
 	 * @return true if done, false if still playing
 	 */

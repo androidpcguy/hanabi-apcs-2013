@@ -5,9 +5,10 @@ import java.io.*;
 import java.util.*;
 
 /**
- * This is the server for the game. It is the manager of clients
+ * This is the server for the game. Sends and receives data to and from clients.
+ * 
  * @author Akshara B, Albert H, Henry W
- * @version 5828.965259.6.52.5.63.63.6.6.1.001.12
+ * @version 1.0
  * 
  */
 public class Server extends Thread {
@@ -23,9 +24,14 @@ public class Server extends Thread {
 	private ArrayList<ObjectInputStream> input;
 
 	/**
-	 * Constructs a new <
+	 * Constructs a new <tt>Server</tt> and instantiates all fields to inital
+	 * states. Also starts the <tt>ServerSocket</tt> to listen to incoming
+	 * connections.
+	 * 
 	 * @param gameState
+	 *            initial <tt>GameState</tt>
 	 * @param port
+	 *            port number to open server on
 	 */
 	public Server(GameState gameState, int port) {
 		this.gameState = gameState;
@@ -50,8 +56,9 @@ public class Server extends Thread {
 		}
 	}
 
-	
-
+	/**
+	 * Sends updated game state to each Player.
+	 */
 	public void sendNewGameState() {
 		try {
 			for (int x = 0; x < input.size(); x++) {
@@ -62,6 +69,9 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Receives new game state from player whose turn finished last.
+	 */
 	public void getNewGameState() {
 		try {
 			gameState = (GameState) input.get(gameState.getCurrPlayer())
@@ -73,12 +83,17 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Waits for all players to join and connect to server and adds output and
+	 * input streams for communication.
+	 * 
+	 * @param numConnections
+	 *            number of players
+	 */
 	public void connect(int numConnections) {
 		try {
 			for (int x = 0; x < numConnections; x++) {
-				System.out.println("1");
 				Socket client = server.accept();
-				System.out.println("2");
 				clients.add(client);
 				output.add(new ObjectOutputStream(client.getOutputStream()));
 				input.add(new ObjectInputStream(client.getInputStream()));
@@ -89,14 +104,34 @@ public class Server extends Thread {
 		}
 	}
 
-	public boolean allAreConnected() {
+	/**
+	 * Determines whether all players have connected to the server.
+	 * 
+	 * @return true if all players connected, false if otherwise
+	 */
+	boolean allAreConnected() {
 		for (int x = 0; x < clients.size(); x++) {
 			if (!clients.get(x).isConnected()) {
-				System.out.println("false");
 				return false;
 			}
 		}
-		System.out.println("true");
 		return true;
+	}
+
+	// methods for testing
+	int getPort() {
+		return server.getLocalPort();
+	}
+
+	ServerSocket getServer() {
+		return server;
+	}
+
+	ArrayList<Socket> getClients() {
+		return clients;
+	}
+
+	GameState getGamestate() {
+		return gameState;
 	}
 }

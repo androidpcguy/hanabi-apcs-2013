@@ -1,13 +1,16 @@
 package final_project;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -55,20 +58,35 @@ public class Player extends Thread {
 			gameFrame.setResizable(false);
 			gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		} catch (IOException ioex) {
-			JOptionPane connFailed = new JOptionPane(
-					"connection failed: wrong port number or server ip address!",
-					JOptionPane.ERROR_MESSAGE);
-			connFailed.setVisible(true);
+			showErrorPanel();
 			System.err
 					.println("connection failed: wrong port number or server ip address!");
-			ioex.printStackTrace();
+			// ioex.printStackTrace();
 		}
+	}
+
+	private void showErrorPanel() {
+		final JFrame frame = new JFrame();
+		JOptionPane connFailed = new JOptionPane(
+				"connection failed: wrong port number or server ip address!",
+				JOptionPane.ERROR_MESSAGE);
+		frame.add(connFailed);
+		frame.setVisible(true);
+		frame.setResizable(false);
+		frame.setSize(500, 150);
+		((JButton) (((Container) connFailed.getComponent(1)).getComponent(0)))
+				.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						frame.dispose();
+					}
+				});
 
 	}
 
 	@Override
 	public void run() {
-		while (socket.isConnected()) {
+		while (socket != null && socket.isConnected()) {
 			try {
 				gameState = (GameState) input.readObject();
 				gameComp.updateGame(gameState);

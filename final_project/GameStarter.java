@@ -10,6 +10,7 @@ import javax.swing.*;
  * 
  * @version 1.0
  */
+@SuppressWarnings("serial")
 public class GameStarter extends JFrame implements ActionListener {
 
 	private static final String CMD_NEW_GAME = "n";
@@ -115,11 +116,16 @@ public class GameStarter extends JFrame implements ActionListener {
 	 * Starts the game with the given port number and the IPv4 Address of the
 	 * server. Creates a server if starting the game.
 	 * 
-	 * @param numPlayers number of players in the game
-	 * @param rainbow true if rainbow cards present, false otherwise
-	 * @param startGame true if creating server, false otherwise
-	 * @param port port number of server
-	 * @param serverIP IPv4 Address of server
+	 * @param numPlayers
+	 *            number of players in the game
+	 * @param rainbow
+	 *            true if rainbow cards present, false otherwise
+	 * @param startGame
+	 *            true if creating server, false otherwise
+	 * @param port
+	 *            port number of server
+	 * @param serverIP
+	 *            IPv4 Address of server
 	 */
 	public void gameStart(int numPlayers, boolean rainbow, boolean startGame,
 			int port, String serverIP) {
@@ -139,7 +145,6 @@ public class GameStarter extends JFrame implements ActionListener {
 
 			@Override
 			public void run() {
-				
 				new GameStarter();
 			}
 		});
@@ -165,6 +170,18 @@ public class GameStarter extends JFrame implements ActionListener {
 		} catch (Exception ex) {}
 	}
 
+	/**
+	 * Function that returns a bounded version of <tt>val</tt>
+	 * 
+	 * @param min
+	 *            lower bound
+	 * @param val
+	 *            value to be bounded
+	 * @param max
+	 *            upper bound
+	 * @return returns <tt>min</tt> if val below min, max if val above max, val
+	 *         if in range
+	 */
 	private int limit(int min, int val, int max) {
 		return Math.min(max, Math.max(val, min));
 	}
