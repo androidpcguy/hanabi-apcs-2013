@@ -93,12 +93,13 @@ public class Player extends Thread {
 		frame.setResizable(false);
 		frame.setSize(500, 150);
 		((JButton) (((Container) connFailed.getComponent(1)).getComponent(0)))
-				.addActionListener(new ActionListener() {
+			.addActionListener(new ActionListener() {
 
-					public void actionPerformed(ActionEvent e) {
-						frame.dispose();
-					}
-				});
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					frame.dispose();
+				}
+			});
 
 	}
 
@@ -110,7 +111,10 @@ public class Player extends Thread {
 			try {
 				gameState = (GameState) input.readObject();
 				gameComp.updateGame(gameState);
-				if (gameState.getCurrPlayer() == playerNum) {
+				if (gameState.isEndOfGame()) {
+					showGameEnd();
+					break;
+				} else if (gameState.getCurrPlayer() == playerNum) {
 					gameComp.play();
 					try {
 						while (!gameComp.doneWithTurn())
@@ -120,10 +124,6 @@ public class Player extends Thread {
 					}
 					this.gameState = gameComp.getGameState();
 					output.writeObject(gameState);
-				}
-				if (gameState.isEndOfGame()) {
-					showGameEnd();
-					break;
 				}
 			} catch (ClassNotFoundException cnfex) {
 				cnfex.printStackTrace();
@@ -138,7 +138,7 @@ public class Player extends Thread {
 		JLabel label = new JLabel("Score: " + getScore());
 		frame.setLayout(new BorderLayout());
 		frame.add(label, BorderLayout.CENTER);
-		frame.setSize(new Dimension(100, 50));
+		frame.setSize(new Dimension(150, 75));
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

@@ -493,6 +493,8 @@ public class GameComponent extends JComponent implements MouseListener,
 		} else {
 			resetClick();
 		}
+		
+		repaint();
 	}
 	
 	private void giveClue (int z1, int i1, int z2, int i2) { 
