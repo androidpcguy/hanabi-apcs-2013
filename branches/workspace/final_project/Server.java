@@ -103,7 +103,6 @@ public class Server extends Thread {
 				output.add(new ObjectOutputStream(client.getOutputStream()));
 				input.add(new ObjectInputStream(client.getInputStream()));
 				output.get(x).writeInt(x);
-				System.out.println("wrote int");
 			}
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
