@@ -30,6 +30,14 @@ public class Player extends Thread {
 
 	private GameState gameState;
 
+	private int port;
+
+	private String serverIP;
+
+	private boolean runThread;
+
+	private boolean debug;
+
 	/**
 	 * Constructs a new <tt>Player</tt> and connects it to the server using the
 	 * specified <tt>serverIP</tt> and <tt>portNumber</tt>
@@ -43,26 +51,36 @@ public class Player extends Thread {
 	 */
 	public Player(int portNumber, String serverIP, GameState gameState) {
 		this.gameState = gameState;
+		this.port = portNumber;
+		this.serverIP = serverIP;
+		this.runThread = true;
+	}
+
+	public void connect() {
 		try {
-			socket = new Socket(serverIP, portNumber);
+			socket = new Socket(serverIP, port);
 			input = new ObjectInputStream(socket.getInputStream());
 			output = new ObjectOutputStream(socket.getOutputStream());
 			this.playerNum = input.readInt();
-
-			gameComp = new GameComponent(playerNum, gameState);
-
-			JFrame gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1));
-			gameFrame.add(gameComp);
-			gameFrame.pack();
-			gameFrame.setVisible(true);
-			gameFrame.setResizable(false);
-			gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			System.out.println(playerNum);
 		} catch (IOException ioex) {
 			showErrorPanel();
 			System.err
 					.println("connection failed: wrong port number or server ip address!");
-			// ioex.printStackTrace();
+			ioex.printStackTrace();
 		}
+	}
+
+	public void startGUI() {
+		gameComp = new GameComponent(playerNum, gameState);
+
+		JFrame gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1));
+		gameFrame.add(gameComp);
+		gameFrame.pack();
+		if (!debug)
+			gameFrame.setVisible(true);
+		gameFrame.setResizable(false);
+		gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
 	private void showErrorPanel() {
@@ -86,7 +104,9 @@ public class Player extends Thread {
 
 	@Override
 	public void run() {
-		while (socket != null && socket.isConnected()) {
+		connect();
+		startGUI();
+		while (socket != null && socket.isConnected() && runThread) {
 			try {
 				gameState = (GameState) input.readObject();
 				gameComp.updateGame(gameState);
@@ -139,5 +159,13 @@ public class Player extends Thread {
 	 */
 	public int getPlayerNum() {
 		return playerNum;
+	}
+
+	void endThread() {
+		this.runThread = false;
+	}
+
+	public boolean connected() {
+		return socket.isConnected();
 	}
 }
