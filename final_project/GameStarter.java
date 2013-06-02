@@ -2,6 +2,8 @@ package final_project;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.apache.commons.validator.routines.InetAddressValidator;
+
 import javax.swing.*;
 
 //shows menu before starting game for ip addresses and port number for clients
@@ -132,7 +134,7 @@ public class GameStarter extends JFrame implements ActionListener {
 
 		if (startGame) {
 			GameState gameState = new GameState(numPlayers, rainbow);
-			Server server = new Server(gameState, port);
+			Server server = new Server(gameState, port, false);
 			server.start();
 		}
 		Player client = new Player(port, serverIP, null);
@@ -166,7 +168,9 @@ public class GameStarter extends JFrame implements ActionListener {
 
 			String serverIP = serverIPField.getText();
 
-			gameStart(numPlayers, rainbow, startGame, port, serverIP);
+			// check if valid ip address
+			if (new InetAddressValidator().isValidInet4Address(serverIP))
+				gameStart(numPlayers, rainbow, startGame, port, serverIP);
 		} catch (Exception ex) {}
 	}
 

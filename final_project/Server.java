@@ -17,6 +17,8 @@ public class Server extends Thread {
 
 	private ServerSocket server;
 
+	private boolean debug;
+
 	private GameState gameState;
 
 	private ArrayList<ObjectOutputStream> output;
@@ -33,8 +35,9 @@ public class Server extends Thread {
 	 * @param port
 	 *            port number to open server on
 	 */
-	public Server(GameState gameState, int port) {
+	public Server(GameState gameState, int port, boolean debug) {
 		this.gameState = gameState;
+		this.debug = debug;
 		this.clients = new ArrayList<Socket>();
 		this.output = new ArrayList<ObjectOutputStream>();
 		this.input = new ArrayList<ObjectInputStream>();
@@ -49,10 +52,12 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		connect(gameState.getNumPlayers());
-		while (allAreConnected()) {
-			sendNewGameState();
-			getNewGameState();
+		if (!debug) {
+			connect(gameState.getNumPlayers());
+			while (allAreConnected()) {
+				sendNewGameState();
+				getNewGameState();
+			}
 		}
 	}
 
@@ -98,6 +103,7 @@ public class Server extends Thread {
 				output.add(new ObjectOutputStream(client.getOutputStream()));
 				input.add(new ObjectInputStream(client.getInputStream()));
 				output.get(x).writeInt(x);
+				System.out.println("wrote int");
 			}
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
@@ -109,7 +115,7 @@ public class Server extends Thread {
 	 * 
 	 * @return true if all players connected, false if otherwise
 	 */
-	boolean allAreConnected() {
+	public boolean allAreConnected() {
 		for (int x = 0; x < clients.size(); x++) {
 			if (!clients.get(x).isConnected()) {
 				return false;
@@ -119,6 +125,15 @@ public class Server extends Thread {
 	}
 
 	// methods for testing
+
+	public ArrayList<ObjectOutputStream> getOutput() {
+		return output;
+	}
+
+	public ArrayList<ObjectInputStream> getInput() {
+		return input;
+	}
+
 	public int getPort() {
 		return server.getLocalPort();
 	}
