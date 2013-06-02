@@ -119,19 +119,19 @@ public class Server extends Thread {
 	}
 
 	// methods for testing
-	int getPort() {
+	public int getPort() {
 		return server.getLocalPort();
 	}
 
-	ServerSocket getServer() {
+	public ServerSocket getServer() {
 		return server;
 	}
 
-	ArrayList<Socket> getClients() {
+	public ArrayList<Socket> getClients() {
 		return clients;
 	}
 
-	GameState getGamestate() {
+	public GameState getGamestate() {
 		return gameState;
 	}
 }
