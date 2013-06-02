@@ -2,7 +2,6 @@ package final_project;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.apache.commons.validator.routines.InetAddressValidator;
 
 import javax.swing.*;
 
@@ -168,9 +167,7 @@ public class GameStarter extends JFrame implements ActionListener {
 
 			String serverIP = serverIPField.getText();
 
-			// check if valid ip address
-			if (new InetAddressValidator().isValidInet4Address(serverIP))
-				gameStart(numPlayers, rainbow, startGame, port, serverIP);
+			gameStart(numPlayers, rainbow, startGame, port, serverIP);
 		} catch (Exception ex) {}
 	}
 
