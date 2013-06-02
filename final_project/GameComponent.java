@@ -430,21 +430,21 @@ public class GameComponent extends JComponent implements MouseListener,
 				clickZone = ZONE_HAND2;
 				clickIndex = x / 80;
 			}
-		} else if (isInRect(x, y, BOUNDS_HAND3)) {
+		} else if (isInRect(x, y, BOUNDS_HAND3) && gameState.getNumPlayers()>2) {
 			if (clickZone == ZONE_CLUE) {
 				giveClue(clickZone, clickIndex, ZONE_HAND3, x/80);
 			} else {
 				clickZone = ZONE_HAND3;
 				clickIndex = x / 80;
 			}
-		} else if (isInRect(x, y, BOUNDS_HAND4)) {
+		} else if (isInRect(x, y, BOUNDS_HAND4) && gameState.getNumPlayers()>3) {
 			if (clickZone == ZONE_CLUE) {
 				giveClue(clickZone, clickIndex, ZONE_HAND4, x/80);
 			} else {
 				clickZone = ZONE_HAND4;
 				clickIndex = x / 80;
 			}
-		} else if (isInRect(x, y, BOUNDS_HAND5)) {
+		} else if (isInRect(x, y, BOUNDS_HAND5) && gameState.getNumPlayers()>4) {
 			if (clickZone == ZONE_CLUE) {
 				giveClue(clickZone, clickIndex, ZONE_HAND5, x/80);
 			} else {

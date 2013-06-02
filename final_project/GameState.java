@@ -64,7 +64,8 @@ public class GameState implements Serializable {
 	}
 
 	/**
-	 * Creates the deck TODO
+	 * Creates the deck by removing random cards from temporary ArrayList and
+	 * adding to the stack.
 	 */
 	private void createDeck() {
 		ArrayList<Card> cards = new ArrayList<Card>(numCards);
@@ -81,6 +82,7 @@ public class GameState implements Serializable {
 			cards.add(new Card(5, CARD_COLORS[color]));
 		}
 		deck = new Stack<Card>();
+		deck.clear();
 		for (int i = 0; i < numCards; i++) {
 			deck.push(cards.remove((int) (Math.random() * cards.size())));
 		}
@@ -178,34 +180,60 @@ public class GameState implements Serializable {
 		lastMove[1] = card.toString();
 	}
 
+	/**
+	 * @return the current player
+	 */
 	public int getCurrPlayer() {
 		return currPlayer;
 	}
 
+	/**
+	 * @return number of lives left
+	 */
 	public int getNumLives() {
 		return numLives;
 	}
 
+	/**
+	 * @return number of clues left
+	 */
 	public int getNumClues() {
 		return numClues;
 	}
 
+	/**
+	 * @param numPlayer
+	 *            index of player
+	 * @return player's hand whose index given by <tt>numPlayer</tt>
+	 */
 	public List<Card> getHand(int numPlayer) {
 		return hands.get(numPlayer);
 	}
 
+	/**
+	 * @return number of players
+	 */
 	public int getNumPlayers() {
-		return this.numPlayers;
+		return numPlayers;
 	}
 
+	/**
+	 * @return list of discarded and failed-to-play cards
+	 */
 	public List<Card> getDiscardPile() {
 		return discardPile;
 	}
 
+	/**
+	 * @return array of played cards
+	 */
 	public int[] getPlayedCards() {
 		return playedCards;
 	}
 
+	/**
+	 * 
+	 */
 	public void updatePlayer() {
 		currPlayer = (currPlayer + 1) % numPlayers;
 	}
@@ -214,7 +242,7 @@ public class GameState implements Serializable {
 		return deck;
 	}
 
-	public boolean hasRainbow() {
+	public boolean isRainbow() {
 		return rainbow;
 	}
 
@@ -245,5 +273,10 @@ public class GameState implements Serializable {
 		 * return true; return false;
 		 */
 		return numLives == 0 || currPlayer == gameEndPlayer;
+	}
+
+	// testing
+	void resetDeck() {
+		createDeck();
 	}
 }
