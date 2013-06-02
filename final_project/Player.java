@@ -24,6 +24,7 @@ public class Player extends Thread {
 
 	private Socket socket;
 
+	private JFrame gameFrame;
 	private GameComponent gameComp;
 
 	private int playerNum;
@@ -62,7 +63,6 @@ public class Player extends Thread {
 			input = new ObjectInputStream(socket.getInputStream());
 			output = new ObjectOutputStream(socket.getOutputStream());
 			this.playerNum = input.readInt();
-			System.out.println(playerNum);
 		} catch (IOException ioex) {
 			showErrorPanel();
 			System.err
@@ -74,7 +74,7 @@ public class Player extends Thread {
 	public void startGUI() {
 		gameComp = new GameComponent(playerNum, gameState);
 
-		JFrame gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1));
+		gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1));
 		gameFrame.add(gameComp);
 		gameFrame.pack();
 		if (!debug)
@@ -139,6 +139,7 @@ public class Player extends Thread {
 		frame.setLayout(new BorderLayout());
 		frame.add(label, BorderLayout.CENTER);
 		frame.setSize(new Dimension(150, 75));
+		frame.setLocation(gameFrame.getLocation());
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
