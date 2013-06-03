@@ -25,6 +25,7 @@ public class Player extends Thread {
 	private Socket socket;
 
 	private JFrame gameFrame;
+
 	private GameComponent gameComp;
 
 	private int playerNum;
@@ -67,7 +68,7 @@ public class Player extends Thread {
 			showErrorPanel();
 			System.err
 					.println("connection failed: wrong port number or server ip address!");
-			ioex.printStackTrace();
+			// ioex.printStackTrace();
 		}
 	}
 
@@ -93,13 +94,13 @@ public class Player extends Thread {
 		frame.setResizable(false);
 		frame.setSize(500, 150);
 		((JButton) (((Container) connFailed.getComponent(1)).getComponent(0)))
-			.addActionListener(new ActionListener() {
+				.addActionListener(new ActionListener() {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					frame.dispose();
-				}
-			});
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						frame.dispose();
+					}
+				});
 
 	}
 
@@ -168,5 +169,9 @@ public class Player extends Thread {
 
 	public boolean connected() {
 		return socket.isConnected();
+	}
+
+	public GameComponent getGameComp() {
+		return gameComp;
 	}
 }

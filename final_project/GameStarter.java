@@ -9,6 +9,7 @@ import javax.swing.*;
 /**
  * Is a simple GUI for starting and joining games.
  * 
+ * @author Akshara Balachandra
  * @version 1.0
  */
 @SuppressWarnings("serial")
@@ -140,6 +141,12 @@ public class GameStarter extends JFrame implements ActionListener {
 		client.start();
 	}
 
+	/**
+	 * Main for the game.
+	 * 
+	 * @param args
+	 *            command-line arguments
+	 */
 	public static void main(String[] args) {
 		ImageLoader.loadImages();
 		SwingUtilities.invokeLater(new Runnable() {

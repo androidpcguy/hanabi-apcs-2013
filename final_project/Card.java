@@ -6,9 +6,6 @@ package final_project;
  */
 public class Card implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4838007413477505493L;
 
 	private int number;
@@ -33,6 +30,9 @@ public class Card implements java.io.Serializable {
 		initClueArrays();
 	}
 
+	/**
+	 * Initializes each index in clue arrays to true
+	 */
 	private void initClueArrays() {
 		for (int i = 0; i < 6; i++)
 			colorClues[i] = true;
@@ -55,7 +55,7 @@ public class Card implements java.io.Serializable {
 					numberClues[i] = false;
 		}
 	}
-	
+
 	/**
 	 * Updates knowledge about this card's color.
 	 * 
@@ -117,13 +117,13 @@ public class Card implements java.io.Serializable {
 	public CardColor getColor() {
 		return color;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		return ((Card) other).color.equals(color)
 				&& ((Card) other).number == number;
 	}
-	
+
 	@Override
 	public String toString() {
 		return color + " " + number;
