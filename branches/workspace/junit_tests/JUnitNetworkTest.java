@@ -37,6 +37,10 @@ public class JUnitNetworkTest {
 		testPlayerA.start();
 		Thread.sleep(50);
 		Player testPlayerB = new Player(testPort, testIP, null);
+		testPlayerA.startGUI();
+		testPlayerB.startGUI();
+		testPlayerA.getGameComp().setVisible(false);
+		testPlayerB.getGameComp().setVisible(false);
 		testPlayerB.start();
 		Thread.sleep(50);
 
@@ -48,23 +52,40 @@ public class JUnitNetworkTest {
 
 		assertTrue(testServer.allAreConnected());
 		testServer.getServer().close();
-		
-		//FIXME
+
 	}
 
 	@Test
-	public void test_connect() throws IOException {
+	public void test_connect() throws IOException, InterruptedException {
 		testIP = Inet4Address.getLocalHost().getHostAddress();
-		
-		Server server = new Server(new GameState(1, false), testPort, true);
+
+		final Server server = new Server(new GameState(1, false), testPort,
+				true);
 		System.out.println("made server");
-		Socket test_socket = new Socket(testIP, testPort);
+		final Socket test_socket = new Socket(testIP, testPort);
 		System.out.println("made socket");
-		ObjectInputStream ois = new ObjectInputStream(test_socket.getInputStream());
-		server.connect(1);
-		assertEquals(ois.readInt(),0);
-		assertTrue(test_socket.isConnected());
-		
-		
+		Thread.sleep(50);
+		new Thread() {
+
+			public void run() {
+
+				try {
+					ObjectInputStream ois = new ObjectInputStream(
+							test_socket.getInputStream());
+					System.out.println("connecting");
+					System.out.println("connected");
+					server.connect(1);
+					assertEquals(ois.readInt(), 0);
+					System.out.println("assertion passed");
+					assertTrue(test_socket.isConnected());
+					test_socket.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}.start();
+
 	}
 }

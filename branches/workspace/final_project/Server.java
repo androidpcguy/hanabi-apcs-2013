@@ -25,6 +25,7 @@ public class Server extends Thread {
 
 	private ArrayList<ObjectInputStream> input;
 
+	
 	/**
 	 * Constructs a new <tt>Server</tt> and instantiates all fields to inital
 	 * states. Also starts the <tt>ServerSocket</tt> to listen to incoming
@@ -34,6 +35,8 @@ public class Server extends Thread {
 	 *            initial <tt>GameState</tt>
 	 * @param port
 	 *            port number to open server on
+	 * @param debug
+	 *            true for debug mode, false otherwise (only for testing)
 	 */
 	public Server(GameState gameState, int port, boolean debug) {
 		this.gameState = gameState;
