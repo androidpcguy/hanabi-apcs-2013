@@ -38,8 +38,6 @@ public class Player extends Thread {
 
 	private boolean runThread;
 
-	private boolean debug;
-
 	/**
 	 * Constructs a new <tt>Player</tt> and connects it to the server using the
 	 * specified <tt>serverIP</tt> and <tt>portNumber</tt>
@@ -78,8 +76,7 @@ public class Player extends Thread {
 		gameFrame = new JFrame("Hanabi: Player " + (playerNum + 1));
 		gameFrame.add(gameComp);
 		gameFrame.pack();
-		if (!debug)
-			gameFrame.setVisible(true);
+		gameFrame.setVisible(true);
 		gameFrame.setResizable(false);
 		gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
