@@ -11,8 +11,7 @@ public class GameState implements Serializable {
 	 */
 	private static final long serialVersionUID = -2642437239483764855L;
 
-	private static final CardColor[] CARD_COLORS = { RED, PURPLE, BLUE, BLACK,
-			GREEN, RAINBOW };
+	private static final CardColor[] CARD_COLORS = CardColor.values();
 
 	private ArrayList<List<Card>> hands;
 
